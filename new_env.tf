@@ -38,7 +38,10 @@ module "host_pool" {
   host_pool_friendly_name = each.value.host_pool.host_pool_friendly_name
   host_pool_name          = each.value.host_pool.host_pool_name
   host_pool_type          = each.value.host_pool.host_pool_type
+  scaling_plan_enabled    = each.value.host_pool.scaling_plan_enabled
   scaling_plan_name       = each.value.host_pool.scaling_plan_name
+  scaling_plan_schedule   = each.value.host_pool.scaling_plan_schedule
+  scaling_plan_time_zone  = each.value.host_pool.scaling_plan_time_zone
 }
 
 #Application Group

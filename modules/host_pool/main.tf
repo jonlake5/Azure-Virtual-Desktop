@@ -47,33 +47,33 @@ resource "azurerm_virtual_desktop_host_pool_registration_info" "avd" {
 }
 
 resource "azurerm_virtual_desktop_scaling_plan" "weekdays" {
-
+  count               = var.scaling_plan_schedule == null ? 0 : 1
   resource_group_name = var.resource_group_name
   location            = var.location
-  time_zone           = "Eastern Standard Time"
+  time_zone           = var.scaling_plan_time_zone
   name                = var.scaling_plan_name
   schedule {
-    name                                 = "Weekdays_Schedule"
-    days_of_week                         = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    ramp_up_start_time                   = "07:30"
-    ramp_up_load_balancing_algorithm     = "BreadthFirst"
-    ramp_up_minimum_hosts_percent        = 40
-    ramp_up_capacity_threshold_percent   = 60
-    peak_start_time                      = "09:00"
-    peak_load_balancing_algorithm        = "DepthFirst"
-    ramp_down_start_time                 = "18:00"
-    ramp_down_load_balancing_algorithm   = "DepthFirst"
-    ramp_down_minimum_hosts_percent      = 20
-    ramp_down_force_logoff_users         = false
-    ramp_down_wait_time_minutes          = 45
-    ramp_down_notification_message       = "Please log off in the next 45 minutes..."
-    ramp_down_capacity_threshold_percent = 90
-    ramp_down_stop_hosts_when            = "ZeroSessions"
-    off_peak_start_time                  = "22:00"
-    off_peak_load_balancing_algorithm    = "DepthFirst"
+    name                                 = var.scaling_plan_schedule.name
+    days_of_week                         = var.scaling_plan_schedule.days_of_week
+    ramp_up_start_time                   = var.scaling_plan_schedule.ramp_up_start_time
+    ramp_up_load_balancing_algorithm     = var.scaling_plan_schedule.ramp_up_load_balancing_algorithm
+    ramp_up_minimum_hosts_percent        = var.scaling_plan_schedule.ramp_up_minimum_hosts_percent
+    ramp_up_capacity_threshold_percent   = var.scaling_plan_schedule.ramp_up_capacity_threshold_percent
+    peak_start_time                      = var.scaling_plan_schedule.peak_start_time
+    peak_load_balancing_algorithm        = var.scaling_plan_schedule.peak_load_balancing_algorithm
+    ramp_down_start_time                 = var.scaling_plan_schedule.ramp_down_start_time
+    ramp_down_load_balancing_algorithm   = var.scaling_plan_schedule.ramp_down_load_balancing_algorithm
+    ramp_down_minimum_hosts_percent      = var.scaling_plan_schedule.ramp_down_minimum_hosts_percent
+    ramp_down_force_logoff_users         = var.scaling_plan_schedule.ramp_down_force_logoff_users
+    ramp_down_wait_time_minutes          = var.scaling_plan_schedule.ramp_down_wait_time_minutes
+    ramp_down_notification_message       = var.scaling_plan_schedule.ramp_down_notification_message
+    ramp_down_capacity_threshold_percent = var.scaling_plan_schedule.ramp_down_capacity_threshold_percent
+    ramp_down_stop_hosts_when            = var.scaling_plan_schedule.ramp_down_stop_hosts_when
+    off_peak_start_time                  = var.scaling_plan_schedule.off_peak_start_time
+    off_peak_load_balancing_algorithm    = var.scaling_plan_schedule.off_peak_load_balancing_algorithm
   }
   host_pool {
-    scaling_plan_enabled = true
+    scaling_plan_enabled = var.scaling_plan_enabled
     hostpool_id          = azurerm_virtual_desktop_host_pool.avd.id
   }
   depends_on = [

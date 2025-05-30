@@ -1,11 +1,9 @@
 resource "azurerm_virtual_desktop_application_group" "application_group" {
   resource_group_name = var.resource_group_name
   location            = var.location
-
-  name         = var.application_group_name
-  type         = var.application_group_type
-  host_pool_id = var.host_pool_id
-
+  name                = var.application_group_name
+  type                = var.application_group_type
+  host_pool_id        = var.host_pool_id
 }
 
 resource "azurerm_virtual_desktop_application" "application" {
@@ -26,13 +24,8 @@ resource "azurerm_virtual_desktop_workspace_application_group_association" "ws_a
 
 }
 
-data "azurerm_role_definition" "application_group_dv_user" {
-  name = "Desktop Virtualization User"
-}
-
 data "azuread_group" "assignment_group" {
   display_name = var.application_group_assignnment_group_name
-
 }
 
 resource "azurerm_role_assignment" "application_group_dv_user" {

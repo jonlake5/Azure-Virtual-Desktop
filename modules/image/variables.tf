@@ -66,6 +66,11 @@ variable "shared_image_sku" {
   description = "SKU of the source image the golden image will be created from"
 }
 
+variable "shared_image_version_name" {
+  type        = string
+  description = "Name of the shared image version"
+}
+
 variable "size" {
   type        = string
   description = "VM Size of the Golden Image"

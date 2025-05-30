@@ -2,19 +2,17 @@ variable "domain_join_password" {
   type        = string
   description = "Password used to join AVD hosts to the domain. This will be populated into an azure keyvault for Azure Automation"
 }
-variable "domain_join_username" {
-  type        = string
-  description = "Username used to join AVD hosts to the domain"
-}
+
 
 variable "images" {
   type = map(object({
-    golden_image_name    = string
-    golden_image_vm_name = string
-    local_admin_password = string
-    local_admin_username = string
-    shared_image_name    = string
-    shared_image_sku     = string
+    golden_image_name         = string
+    golden_image_vm_name      = string
+    local_admin_password      = string
+    local_admin_username      = string
+    shared_image_name         = string
+    shared_image_sku          = string
+    shared_image_version_name = string
   }))
   validation {
     condition = alltrue([
@@ -37,7 +35,29 @@ variable "environments" {
       host_pool_friendly_name = string
       host_pool_name          = string
       host_pool_type          = string
-      scaling_plan_name       = string
+      scaling_plan_enabled    = bool
+      scaling_plan_name       = optional(string)
+      scaling_plan_time_zone  = string
+      scaling_plan_schedule = optional(object({
+        name                                 = string
+        days_of_week                         = list(string)
+        ramp_up_start_time                   = string
+        ramp_up_load_balancing_algorithm     = string
+        ramp_up_minimum_hosts_percent        = number
+        ramp_up_capacity_threshold_percent   = number
+        peak_start_time                      = string
+        peak_load_balancing_algorithm        = string
+        ramp_down_start_time                 = string
+        ramp_down_load_balancing_algorithm   = string
+        ramp_down_minimum_hosts_percent      = number
+        ramp_down_force_logoff_users         = bool
+        ramp_down_wait_time_minutes          = number
+        ramp_down_notification_message       = string
+        ramp_down_capacity_threshold_percent = number
+        ramp_down_stop_hosts_when            = string
+        off_peak_start_time                  = string
+        off_peak_load_balancing_algorithm    = string
+      }))
       application_groups = optional(map(object({
 
         application_group_assignnment_group_name = string

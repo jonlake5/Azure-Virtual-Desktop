@@ -89,6 +89,7 @@ module "shared_image" {
   subnet_id                 = azurerm_subnet.test-avd-subnet.id
   shared_image_name         = each.value.shared_image_name
   shared_image_sku          = each.value.shared_image_sku
+  shared_image_version_name = each.value.shared_image_version_name
   depends_on                = [module.shared_image_gallery]
 }
 
@@ -181,22 +182,27 @@ locals {
     "enableScalingPlan" = {
       file_name = "enableScalingPlan.ps1"
       webhook   = true
+      type      = "PowerShell72"
     }
     "disableScalingPlan" = {
       file_name = "disableScalingPlan.ps1"
       webhook   = true
+      type      = "PowerShell72"
     }
     "createHost" = {
       file_name = "createHost.ps1"
       webhook   = true
+      type      = "PowerShell72"
     }
     "addHostToSessionPoolDSC" = {
       file_name = "addHostToPoolDSC.ps1"
       webhook   = true
+      type      = "PowerShell72"
     }
     "addHostToDomain" = {
       file_name = "addHostToDomain.ps1"
       webhook   = true
+      type      = "PowerShell72"
     }
   }
 }

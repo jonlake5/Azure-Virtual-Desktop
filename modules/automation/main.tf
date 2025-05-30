@@ -31,8 +31,8 @@ resource "azurerm_automation_runbook" "runbook" {
   location                = var.location
   log_verbose             = false
   automation_account_name = azurerm_automation_account.automation.name
-  log_progress            = true
-  runbook_type            = "PowerShell72"
+  log_progress            = false
+  runbook_type            = each.value.type
   name                    = split(".ps1", each.value.file_name)[0]
   content                 = file("${path.module}/runbooks/${each.value.file_name}")
   publish_content_link {

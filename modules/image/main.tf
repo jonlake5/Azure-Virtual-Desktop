@@ -99,7 +99,7 @@ resource "azurerm_shared_image" "avd-win11" {
 }
 
 resource "azurerm_shared_image_version" "win11-avd" {
-  name                = "0.0.1"
+  name                = var.shared_image_version_name
   gallery_name        = var.shared_image_gallery_name
   image_name          = azurerm_shared_image.avd-win11.name
   resource_group_name = var.resource_group_name
@@ -108,7 +108,7 @@ resource "azurerm_shared_image_version" "win11-avd" {
 
   target_region {
     name                   = azurerm_shared_image.avd-win11.location
-    regional_replica_count = 2
+    regional_replica_count = 1
     storage_account_type   = "Standard_LRS"
   }
   depends_on = [azurerm_shared_image.avd-win11]

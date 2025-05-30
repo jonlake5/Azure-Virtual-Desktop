@@ -35,6 +35,7 @@ variable "runbooks" {
   type = map(object({
     file_name = string
     webhook   = bool
+    type      = string
   }))
-  description = "Map of objects to create runbooks from"
+  description = "Map of objects defining the runbook"
 }
