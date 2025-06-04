@@ -174,6 +174,10 @@ output "managed_identity_object_id" {
   value = module.monitoring.managed_identity_id
 }
 
+output "maintenance_config_name" {
+  value = module.updates.maintenance_config_name
+}
+
 output "webhook_uri" {
   value     = module.automation.webhook_url
   sensitive = true

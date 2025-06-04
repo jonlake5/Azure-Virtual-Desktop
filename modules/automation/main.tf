@@ -43,12 +43,14 @@ resource "azurerm_automation_runbook" "runbook" {
 }
 
 resource "azurerm_automation_webhook" "webhook" {
-  for_each                = var.runbooks
+  for_each = { for k, v in var.runbooks : k => v if v.webhook && v.enabled }
+  # for_each                = var.runbooks
   resource_group_name     = var.resource_group_name
   automation_account_name = azurerm_automation_account.automation.name
   runbook_name            = split(".ps1", each.value.file_name)[0]
-  name                    = "${split(".ps1", each.value.file_name)[0]}-webhook"
-  expiry_time             = timeadd(timestamp(), "999h")
+  # runbook_name = azurerm_automation_runbook.runbook.name
+  name        = "${split(".ps1", each.value.file_name)[0]}-webhook"
+  expiry_time = timeadd(timestamp(), "999h")
   lifecycle {
     ignore_changes = [expiry_time]
   }

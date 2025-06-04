@@ -20,6 +20,8 @@ $user = $inputData.user
 $vaultName = $inputData.vaultName
 $secretName = $inputData.secretName
 $maintenanceConfigName = $inputData.maintenanceConfigName
+$joinToDomain = $inputData.joinToDomain
+$joinType = $inputData.joinType
 
 $null = Connect-AzAccount -Identity -AccountId $accountID
 
@@ -94,15 +96,20 @@ New-AzVM `
     
 
 write-output "VM is $($vmName)"
-write-output "Username is $($username)"
-write-output "Joining the domain"
+write-output "Local Username is $($username)"
 
-$password = (Get-AzKeyVaultSecret -vaultName $vaultName -Name $secretName).secretValue | ConvertFrom-SecureString -AsPlainText
-[securestring]$secStringPassword = ConvertTo-SecureString $password -AsPlainText -Force
-[pscredential]$credential = New-Object System.Management.Automation.PSCredential ($user, $secStringPassword)
 
-Set-AzVMADDomainExtension -Name "domain-join" -DomainName $domainName -OUPath $ouPath -VMName $vMName -Credential $credential -ResourceGroupName $ResourceGroupName -JoinOption 0x00000003 -Restart -Verbose
+if ($joinToDomain) {
+    if ($joinType -eq "AD") {
+        write-output "Joining the domain"
 
+        $password = (Get-AzKeyVaultSecret -vaultName $vaultName -Name $secretName).secretValue | ConvertFrom-SecureString -AsPlainText
+        [securestring]$secStringPassword = ConvertTo-SecureString $password -AsPlainText -Force
+        [pscredential]$credential = New-Object System.Management.Automation.PSCredential ($user, $secStringPassword)
+
+        Set-AzVMADDomainExtension -Name "domain-join" -DomainName $domainName -OUPath $ouPath -VMName $vMName -Credential $credential -ResourceGroupName $ResourceGroupName -JoinOption 0x00000003 -Restart -Verbose
+    }
+}
 if ($maintenancePlan) {
     $configAssignmentName = "$vmName-$maintenance"
     $maintenanceConfig = Get-AzMaintenanceConfiguration -ResourceGroupName $resourceGroupName -Name $maintenanceConfigName

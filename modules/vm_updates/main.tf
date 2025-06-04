@@ -210,3 +210,8 @@ resource "azurerm_maintenance_configuration" "patch_window" {
 
   }
 }
+
+output "maintenance_config_name" {
+  # value = azurerm_maintenance_configuration.patch_window[*].name
+  value = [for k in azurerm_maintenance_configuration.patch_window : k.name]
+}
