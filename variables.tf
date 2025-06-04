@@ -83,7 +83,7 @@ variable "images" {
 
 variable "keyvault_name" {
   type        = string
-  description = "Name or keyvault used to store secret of domain join"
+  description = "Name or keyvault used to store secret of domain join password"
 }
 
 variable "maintenance_definition" {
@@ -99,17 +99,6 @@ variable "maintenance_definition" {
   }))
 }
 
-# variable "maintenance_name" {
-#   type        = string
-#   description = "Name of the maintenance plan for updates"
-# }
-
-# variable "maintenance_scope" {
-#   type        = string
-#   description = "Scope of the Maintenance plan. Possible values are Extension, Host, InGuestPatch, OSImage, SQLDB or SQLManagedInstance"
-#   default     = "InGuestPatch"
-# }
-
 variable "policy_target_locations" {
   type        = list(string)
   description = "A list of locations to target for the policy assignments for VMs"
@@ -120,18 +109,11 @@ variable "storage_account" {
     smb_contributor_group_name          = string
     smb_elevated_contributor_group_name = string
     storage_account_name                = string
-    # storage_account_share = map(object({
-    #   name  = string
-    #   quota = number
-    # }))
+    storage_account_share = map(object({
+      name  = string
+      quota = number
+    }))
   })
-}
-
-variable "storage_account_share" {
-  type = map(object({
-    name  = string
-    quota = number
-  }))
 }
 
 variable "tenant_id" {

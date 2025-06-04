@@ -94,7 +94,7 @@ module "shared_image" {
   depends_on                = [module.shared_image_gallery]
 }
 
-#Storage Account
+# # #Storage Account
 # module "storage_account" {
 #   source                              = "./modules/storage_account"
 #   location                            = azurerm_resource_group.avd.location
@@ -103,18 +103,7 @@ module "shared_image" {
 #   smb_contributor_group_name          = var.storage_account.smb_contributor_group_name
 #   smb_elevated_contributor_group_name = var.storage_account.smb_elevated_contributor_group_name
 #   storage_account_name                = var.storage_account.storage_account_name
-#   storage_account_share               = var.storage_account_share
-#   # storage_account_share = {
-#   #   # for_each = var.storage_account.share
-#   #   "share_1" = {
-#   #     name  = "fslogix-network"
-#   #     quota = 300
-#   #   }
-#   #   "share_2" = {
-#   #     name  = "fslogix-sap"
-#   #     quota = 300
-#   #   }
-#   # }
+#   storage_account_share               = var.storage_account.storage_account_share
 # }
 
 module "monitoring" {
@@ -128,7 +117,6 @@ module "monitoring" {
 }
 
 module "updates" {
-  # for_each                      = var.maintenance_definition
   source                        = "./modules/vm_updates"
   resource_group_id             = azurerm_resource_group.avd.id
   managed_identity_id           = module.monitoring.managed_identity_id
@@ -137,13 +125,6 @@ module "updates" {
   resource_group_name           = azurerm_resource_group.avd.name
   policy_target_locations       = var.policy_target_locations
   maintenance_definition        = var.maintenance_definition
-  # maintenance_name              = each.value.maintenance_name
-  # maintenance_scope             = each.value.maintenance_scope
-  # maintenance_duration          = each.value.maintenance_duration
-  # maintenance_start_date_time   = each.value.maintenance_start_date_time
-  # maintenance_end_date_time     = each.value.maintenance_end_date_time
-  # maintenance_recurrence        = each.value.maintenance_recurrence
-  # maintenance_time_zone         = each.value.maintenance_time_zone
 }
 
 module "automation" {
@@ -182,80 +163,3 @@ output "webhook_uri" {
   value     = module.automation.webhook_url
   sensitive = true
 }
-
-
-# #Workspace
-# module "workspace" {
-#   source                  = "./modules/avd_workspace"
-#   location                = azurerm_resource_group.avd.location
-#   resource_group_name     = azurerm_resource_group.avd.name
-#   workspace_description   = "A test Workspace for AVD"
-#   workspace_friendly_name = "Workspace for AVD"
-#   workspace_name          = "workspaceAVD"
-# }
-# #hostpool
-# ##Currently static values
-# module "host_pool" {
-#   source                  = "./modules/host_pool"
-#   resource_group_name     = azurerm_resource_group.avd.name
-#   location                = azurerm_resource_group.avd.location
-#   load_balancer_type      = "BreadthFirst"
-#   host_pool_friendly_name = "Host Pool for App1"
-#   host_pool_name          = "hp-app1"
-#   host_pool_type          = "Pooled"
-
-# }
-
-# #Application Group
-# module "application_group" {
-#   source                                   = "./modules/application_group"
-#   application_group_assignnment_group_name = "Duo AD Sync"
-#   application_group_name                   = "Network-Apps"
-#   application_group_type                   = "RemoteApp"
-#   applications = { chrome = {
-#     friendly_name = "Google Chrome"
-#     name          = "chrome"
-#     path          = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-#   } }
-#   workspace_id        = module.workspace.workspace_id
-#   resource_group_name = azurerm_resource_group.avd.name
-#   location            = azurerm_resource_group.avd.location
-#   host_pool_id        = module.host_pool.hostpool_id
-# }
-
-
-# locals {
-#   runbooks = {
-#     "enableScalingPlan" = {
-#       file_name = "enableScalingPlan.ps1"
-#       webhook   = true
-#       type      = "PowerShell72"
-#     }
-#     "disableScalingPlan" = {
-#       file_name = "disableScalingPlan.ps1"
-#       webhook   = true
-#       type      = "PowerShell72"
-#     }
-#     "createHost" = {
-#       file_name = "createHost.ps1"
-#       webhook   = true
-#       type      = "PowerShell72"
-#     }
-#     "addHostToSessionPoolDSC" = {
-#       file_name = "addHostToPoolDSC.ps1"
-#       webhook   = true
-#       type      = "PowerShell72"
-#     }
-#     "addHostToDomain" = {
-#       file_name = "addHostToDomain.ps1"
-#       webhook   = true
-#       type      = "PowerShell72"
-#     }
-#     "createRemediationTasks" = {
-#       file_name = "createRemediationTasks.ps1"
-#       webhook   = true
-#       type      = "PowerShell72"
-#     }
-#   }
-# }
-
