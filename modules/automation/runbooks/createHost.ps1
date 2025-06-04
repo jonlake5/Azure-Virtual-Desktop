@@ -67,6 +67,10 @@ if ($vmName.Length -gt 15) {
 
 ## Get the base image to use
 $image = Get-azgalleryImageDefinition -ResourceGroupName $resourceGroupName -GalleryName $galleryName -GalleryImageDefinitionName $imageDefinition #-GalleryImageVersionName $imageVersion
+if ($null -eq $image) {
+    throw "Unable to get the shared image ($imageDefinition) from the gallery $galleryName"
+}
+
 write-output "Image is $($image.id)"
 ## Get the subnet and vNet to put the host it
 $vnet = Get-AzVirtualNetwork -ResourceGroupName $resourceGroupName -Name $vnetName
@@ -74,13 +78,15 @@ $subnet = Get-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $vn
 $nicName = "$($vmName)-nic"
 $nic = New-AzNetworkInterface -ResourceGroupName $resourceGroupName -Location $location -Name $nicName -SubnetId $subnet.Id -Force
 
+if ($null -eq $nic) {
+    throw "Unable to create the NIC for the VM"
+}
 
 # Create the VM
 $username = "avdadmin"
 $password = -join ((65..90) + (97..122) + (48..57) | Get-Random -Count 16 | ForEach-Object { [char]$_ })
 $securePassword = ConvertTo-SecureString -String $password -AsPlainText -Force
 $cred = New-Object System.Management.Automation.PSCredential ($username, $securePassword)
-
 
 $vmConfig = New-AzVMConfig `
     -VMName $vmName `
@@ -89,15 +95,17 @@ $vmConfig = New-AzVMConfig `
     Set-AzVMSourceImage -Id $image.Id  | `
     Add-AzVMNetworkInterface -Id $nic.Id
 
-New-AzVM `
+$vm = New-AzVM `
     -ResourceGroupName $resourceGroupName `
     -Location $location `
     -VM $vmConfig  
     
+if ($null -eq $vm) {
+    throw "The VM was unable to be created. Exiting"
+}
 
 write-output "VM is $($vmName)"
 write-output "Local Username is $($username)"
-
 
 if ($joinToDomain) {
     if ($joinType -eq "AD") {

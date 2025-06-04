@@ -15,7 +15,6 @@ $accountID = $inputData.accountID
 
 $null = Connect-AzAccount -Identity -AccountId $accountID
 
-
 write-output "Starting Automation"
 
 $subscriptionId = (Get-AzContext).Subscription.Id
@@ -24,7 +23,9 @@ $hostPoolArmPath = "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup
 
 # Get all scaling plans in the resource group
 $scalingPlan = Get-AzWvdScalingPlan -ResourceGroupName $resourceGroupName -name $scalingPlanName
-
+if ($null -eq $scalingPlan) {
+    throw "Unable to get scaling plan. Exiting."
+}
 
 
 if (($false -eq $($scalingPlan.HostPoolReference.ScalingPlanEnabled) -and $scalingPlan.HostPoolReference.HostPoolArmPath -eq $hostPoolArmPath)) {

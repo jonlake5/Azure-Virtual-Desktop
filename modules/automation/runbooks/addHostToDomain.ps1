@@ -17,7 +17,9 @@ $null = Connect-AzAccount -Identity -AccountId $accountID
 
 $password = (Get-AzKeyVaultSecret -vaultName $vaultName -Name $secretName).secretValue | ConvertFrom-SecureString -AsPlainText
 
-
+if ($null -eq $password) {
+    throw "Unable to retrieve the domain join password."
+}
 
 write-output "Domain Name is $domainName"
 write-output "ouPath is $ouPath"

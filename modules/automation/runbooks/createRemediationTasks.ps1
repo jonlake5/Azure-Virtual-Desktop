@@ -18,8 +18,7 @@ $resourceGroup = Get-AzResourceGroup -Name $resourceGroupName
 # Get the policy assignment
 $assignments = Get-AzPolicyAssignment -Scope $resourceGroup.ResourceId -ErrorAction Stop
 if ($null -eq $assignments) {
-    Write-Error "Policy assignment '$PolicyAssignmentName' not found."
-    return
+    throw "Policy assignment '$PolicyAssignmentName' not found."
 }
 
 foreach ($assignment in $assignments) {
@@ -31,9 +30,6 @@ foreach ($assignment in $assignments) {
         LocationFilter     = $locationFilter
     }
     Write-Output "Creating remediation task '$remediationAssignmentName' for policy Assignment '$($assignment.Name)'..."
-    $remediationParams
-    # Start-AzPolicyRemediation @remediationParams
+    Start-AzPolicyRemediation @remediationParams
     Write-Output "Remediation task created successfully."
 }
-
-

@@ -25,6 +25,10 @@ if ($null -eq $regToken.Token) {
 }
 $registrationToken = $regToken.Token
 
+if ($null -eq $registrationToken) {
+    throw "Unable to retrieve the registration token. Exiting."
+}
+
 $configUrl = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip"
 $configFunction = "Configuration.ps1\AddSessionHost"
 

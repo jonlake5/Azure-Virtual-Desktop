@@ -16,10 +16,6 @@ $accountID = $inputData.accountID
 $null = Connect-AzAccount -Identity -AccountId $accountID
 
 
-
-# Replace with your actual values
-write-host "Starting Automation"
-
 $subscriptionId = (Get-AzContext).Subscription.Id
 # Build the full ARM path for the host pool
 $hostPoolArmPath = "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DesktopVirtualization/hostpools/$hostPoolName"
@@ -27,7 +23,9 @@ $hostPoolArmPath = "/subscriptions/$subscriptionId/resourceGroups/$resourceGroup
 # Get all scaling plans in the resource group
 $scalingPlan = Get-AzWvdScalingPlan -ResourceGroupName $resourceGroupName -name $scalingPlanName
 
-
+if ($null -eq $scalingPlan) {
+    throw "Unable to get scaling plan. Exiting."
+}
 
 if (($true -eq $($scalingPlan.HostPoolReference.ScalingPlanEnabled) -and $scalingPlan.HostPoolReference.HostPoolArmPath -eq $hostPoolArmPath)) {
     write-output "Turning off Scaling Plan for Host Pool $($hostPoolName)"
