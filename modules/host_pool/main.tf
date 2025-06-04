@@ -12,10 +12,8 @@
 
 
 resource "azurerm_virtual_desktop_host_pool" "avd" {
-
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
+  location                 = var.location
+  resource_group_name      = var.resource_group_name
   name                     = var.host_pool_name
   friendly_name            = var.host_pool_friendly_name
   validate_environment     = var.validate_environment
@@ -37,14 +35,14 @@ resource "azurerm_virtual_desktop_host_pool" "avd" {
   }
 }
 
-
-# resource "azurerm_virtual_desktop_host_pool_registration_info" "avd" {
-#   hostpool_id     = azurerm_virtual_desktop_host_pool.avd.id
-#   expiration_date = timeadd(timestamp(), "${var.registration_key_valid_hours}h")
-#   lifecycle {
-#     ignore_changes = [expiration_date]
-#   }
-# }
+resource "azurerm_monitor_diagnostic_setting" "diagnostic_setting" {
+  name                       = "${azurerm_virtual_desktop_host_pool.avd.name}-diagnostic-setting"
+  target_resource_id         = azurerm_virtual_desktop_host_pool.avd.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+  enabled_log {
+    category_group = "AllLogs"
+  }
+}
 
 resource "azurerm_virtual_desktop_scaling_plan" "weekdays" {
   count               = var.scaling_plan_schedule == null ? 0 : 1
@@ -80,10 +78,6 @@ resource "azurerm_virtual_desktop_scaling_plan" "weekdays" {
     azurerm_virtual_desktop_host_pool.avd
   ]
 }
-
-
-
-
 
 
 output "hostpool_id" {

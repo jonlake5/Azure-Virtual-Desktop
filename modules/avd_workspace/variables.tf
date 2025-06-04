@@ -3,6 +3,11 @@ variable "location" {
   description = "Location of the shared image gallery"
 }
 
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "Id of the log analytics workspace to send logs to"
+}
+
 variable "resource_group_name" {
   type        = string
   description = "Name of resource group for the shared gallery"

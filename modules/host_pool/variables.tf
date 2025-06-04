@@ -31,6 +31,11 @@ variable "location" {
   description = "Location of the shared image gallery"
 }
 
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "The Log Analytics workspace to send the diagnostic data to"
+}
+
 variable "maximum_sessions_allowed" {
   type        = number
   description = "Number of sessions per host"

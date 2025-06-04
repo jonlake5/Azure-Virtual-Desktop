@@ -21,13 +21,13 @@ resource "azurerm_resource_group_policy_assignment" "ama_install" {
     type         = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.monitoring.id]
   }
-  #   parameters = <<PARAMS
-  #     {
-  #       "scopeToSupportedImages": {
-  #         "value":"True"
-  #       }
-  #     }
-  # PARAMS
+  parameters = <<PARAMS
+{
+  "scopeToSupportedImages": {
+    "value":false
+  }
+}
+PARAMS
 }
 
 resource "azurerm_monitor_data_collection_rule" "avd_session_hosts" {
@@ -108,10 +108,39 @@ resource "azurerm_resource_group_policy_assignment" "associate_dcr" {
   {
     "dcrResourceId": {
       "value":"${azurerm_monitor_data_collection_rule.avd_session_hosts.id}"
+    },
+    "scopeToSupportedImages": {
+    "value":false
     }
   }
 PARAMS
 }
+
+resource "azurerm_resource_group_policy_assignment" "system_assigned_identity" {
+  name                 = "Enable System Assigned Identity"
+  resource_group_id    = var.policy_assignment_resource_group_id
+  location             = var.location
+  policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/17b3de92-f710-4cf4-aa55-0e7859f1ed7b"
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.monitoring.id]
+  }
+}
+
+# resource "azurerm_resource_group_policy_assignment" "vm_app_insights" {
+#   name                 = "Configure VM App Insights"
+#   resource_group_id    = var.policy_assignment_resource_group_id
+#   location             = var.location
+#   policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/e6421995-539a-4ce3-854b-1c88534396cf"
+#   parameters           = <<PARAMS
+# {
+# "categoryGroup": {
+#   value: "allLogs"
+#   }
+# }
+# PARAMS
+# }
+
 
 locals {
   subscription_scope = "/subscriptions/${var.subscription_id}"
@@ -124,10 +153,15 @@ resource "azurerm_role_assignment" "contributor" {
   role_definition_name = "Contributor"
 }
 
+output "log_analytics_workspace_id" {
+  value = azurerm_log_analytics_workspace.workspace.id
+}
+output "managed_identity_id" {
+  value = azurerm_user_assigned_identity.monitoring.id
+}
+
 output "managed_identity_principal_id" {
   value = azurerm_user_assigned_identity.monitoring.principal_id
 }
 
-output "managed_identity_id" {
-  value = azurerm_user_assigned_identity.monitoring.id
-}
+

@@ -23,6 +23,9 @@ if ($null -eq $assignments) {
 
 foreach ($assignment in $assignments) {
     $remediationAssignmentName = "remediation_$($assignment.Name.replace(' ',''))_$(Get-Date -Format 'yyyyMMddHHmm')"
+    if ($null -in @($assignment.Id, $resourceGroup.ResourceGroupName)) {
+        throw "AssignmentID or ResourceGroup were not found`n`nResource Group: $($resourceGroup.ResourceGroupName)`n`nAssignmentId: $($assignment.Id)"
+    }
     $remediationParams = @{
         Name               = $remediationAssignmentName
         PolicyAssignmentId = $assignment.Id
@@ -30,6 +33,10 @@ foreach ($assignment in $assignments) {
         LocationFilter     = $locationFilter
     }
     Write-Output "Creating remediation task '$remediationAssignmentName' for policy Assignment '$($assignment.Name)'..."
-    Start-AzPolicyRemediation @remediationParams
-    Write-Output "Remediation task created successfully."
+    $remediationTask = Start-AzPolicyRemediation @remediationParams
+    if ($null -eq $remediationTask) {
+        write-output "Unable to create remediation task."
+    }
+    else {
+    }   Write-Output "Remediation task created successfully."
 }
