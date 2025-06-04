@@ -88,13 +88,14 @@ variable "keyvault_name" {
 
 variable "maintenance_definition" {
   type = map(object({
-    maintenance_name            = string
-    maintenance_scope           = string
-    maintenance_duration        = optional(string)
-    maintenance_start_date_time = string
-    maintenance_end_date_time   = optional(string)
-    maintenance_recurrence      = optional(string)
-    maintenance_time_zone       = string
+    maintenance_name                 = string
+    maintenance_scope                = string
+    maintenance_duration             = optional(string)
+    maintenance_start_date_time      = string
+    maintenance_end_date_time        = optional(string)
+    maintenance_recurrence           = optional(string)
+    maintenance_time_zone            = string
+    patch_classifications_to_include = optional(list(string), ["Critical", "Security", ])
   }))
 }
 

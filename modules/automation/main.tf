@@ -26,7 +26,8 @@ resource "azurerm_automation_variable_string" "string" {
 }
 
 resource "azurerm_automation_runbook" "runbook" {
-  for_each                = var.runbooks
+  # for_each = var.runbooks
+  for_each                = { for k, v in var.runbooks : k => v if v.enabled }
   resource_group_name     = var.resource_group_name
   location                = var.location
   log_verbose             = false

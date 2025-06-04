@@ -55,6 +55,7 @@ variable "runbooks" {
     file_name = string
     webhook   = bool
     type      = string
+    enabled   = bool
   }))
   description = "Map of objects defining the runbook"
 }

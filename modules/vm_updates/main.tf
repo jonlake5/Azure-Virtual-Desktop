@@ -188,16 +188,25 @@ RULE
 }
 
 resource "azurerm_maintenance_configuration" "patch_window" {
-  for_each            = var.maintenance_definition
-  name                = each.value.maintenance_name
-  scope               = each.value.maintenance_scope
-  resource_group_name = var.resource_group_name
-  location            = var.location
+  for_each                 = var.maintenance_definition
+  name                     = each.value.maintenance_name
+  scope                    = each.value.maintenance_scope
+  resource_group_name      = var.resource_group_name
+  location                 = var.location
+  in_guest_user_patch_mode = "User"
+  install_patches {
+    windows {
+      classifications_to_include = each.value.patch_classifications_to_include
+    }
+    reboot = "IfRequired"
+
+  }
   window {
     start_date_time      = each.value.maintenance_start_date_time
     time_zone            = each.value.maintenance_time_zone
     expiration_date_time = each.value.maintenance_end_date_time
     duration             = each.value.maintenance_duration
     recur_every          = each.value.maintenance_recurrence
+
   }
 }
