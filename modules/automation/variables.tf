@@ -13,6 +13,11 @@ variable "automation_variables" {
   description = "List of variables to apply to the automation account"
   default     = []
 }
+variable "domain_join_password" {
+  type        = string
+  description = "Password used for domain join of the AVD hosts"
+  sensitive   = true
+}
 
 variable "identity" {
   type = list(object({
@@ -21,9 +26,23 @@ variable "identity" {
   }))
 }
 
+variable "keyvault_name" {
+  type        = string
+  description = "Name of keyvault used to store domain join password"
+}
+
+variable "keyvault_secret_name" {
+  type        = string
+  description = "Name of Key Vault secret that holds the domain join password"
+  default     = "domain-join-password"
+}
 variable "location" {
   type        = string
   description = "Azure region"
+}
+variable "managed_identity_principal_id" {
+  type        = string
+  description = "Principal ID of the Managed Identity used to access keyvault"
 }
 
 variable "resource_group_name" {
@@ -38,4 +57,9 @@ variable "runbooks" {
     type      = string
   }))
   description = "Map of objects defining the runbook"
+}
+
+variable "tenant_id" {
+  type        = string
+  description = "Tenant ID of Azure account"
 }

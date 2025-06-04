@@ -9,7 +9,6 @@ module "workspace" {
   workspace_name          = each.value.workspace.workspace_name
 }
 
-
 locals {
   flattened_host_pools = {
     for hp in flatten([
@@ -45,7 +44,6 @@ module "host_pool" {
 }
 
 #Application Group
-
 locals {
   flattened_application_groups = {
     for key, ag in flatten([
@@ -64,7 +62,6 @@ locals {
     ]) : key => ag.value
   }
 }
-
 
 module "application_group" {
   source = "./modules/application_group"

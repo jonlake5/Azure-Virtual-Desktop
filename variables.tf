@@ -1,27 +1,17 @@
+variable "automation_runbooks" {
+  type = map(object({
+    file_name = string
+    webhook   = bool
+    type      = string
+    enabled   = optional(bool, true)
+  }))
+}
+
 variable "domain_join_password" {
   type        = string
   description = "Password used to join AVD hosts to the domain. This will be populated into an azure keyvault for Azure Automation"
+  sensitive   = true
 }
-
-
-variable "images" {
-  type = map(object({
-    golden_image_name         = string
-    golden_image_vm_name      = string
-    local_admin_password      = string
-    local_admin_username      = string
-    shared_image_name         = string
-    shared_image_sku          = string
-    shared_image_version_name = string
-  }))
-  validation {
-    condition = alltrue([
-      for image in var.images : length(image.golden_image_vm_name) <= 15
-    ])
-    error_message = "Each golden_image_vm_name must be 15 characters or fewer."
-  }
-}
-
 
 variable "environments" {
   type = map(object({
@@ -73,7 +63,56 @@ variable "environments" {
   }))
 }
 
+variable "images" {
+  type = map(object({
+    golden_image_name         = string
+    golden_image_vm_name      = string
+    local_admin_password      = string
+    local_admin_username      = string
+    shared_image_name         = string
+    shared_image_sku          = string
+    shared_image_version_name = string
+  }))
+  validation {
+    condition = alltrue([
+      for image in var.images : length(image.golden_image_vm_name) <= 15
+    ])
+    error_message = "Each golden_image_vm_name must be 15 characters or fewer."
+  }
+}
 
+variable "keyvault_name" {
+  type        = string
+  description = "Name or keyvault used to store secret of domain join"
+}
+
+variable "maintenance_definition" {
+  type = map(object({
+    maintenance_name            = string
+    maintenance_scope           = string
+    maintenance_duration        = optional(string)
+    maintenance_start_date_time = string
+    maintenance_end_date_time   = optional(string)
+    maintenance_recurrence      = optional(string)
+    maintenance_time_zone       = string
+  }))
+}
+
+# variable "maintenance_name" {
+#   type        = string
+#   description = "Name of the maintenance plan for updates"
+# }
+
+# variable "maintenance_scope" {
+#   type        = string
+#   description = "Scope of the Maintenance plan. Possible values are Extension, Host, InGuestPatch, OSImage, SQLDB or SQLManagedInstance"
+#   default     = "InGuestPatch"
+# }
+
+variable "policy_target_locations" {
+  type        = list(string)
+  description = "A list of locations to target for the policy assignments for VMs"
+}
 
 variable "storage_account" {
   type = object({
@@ -94,3 +133,7 @@ variable "storage_account_share" {
   }))
 }
 
+variable "tenant_id" {
+  type        = string
+  description = "Tenant ID of azure account"
+}

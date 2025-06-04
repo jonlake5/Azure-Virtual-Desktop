@@ -11,23 +11,20 @@ $vmName = $inputData.vmName
 
 $null = Connect-AzAccount -Identity -AccountId $accountID
 
-function get-RegistrationKey {
-    param (
-        [string]$hostPoolName,
-        [string]$resourceGroupName
-
-    )
-    $regToken = Get-AzWvdHostPoolRegistrationToken -ResourceGroupName $resourceGroupname -HostPoolName $hostPoolName
-    if ($null -eq $regToken) {
-        $hostPool = Get-AzWvdHostPool -ResourceGroupName $resourceGroupName -HostPoolName $hostPoolName
-        $expirationTime = (Get-Date).AddHours(1)
-        $regToken = New-RdsRegistrationInfo -HostPool $hostPool -ExpirationTime $expirationTime
-    }
-    return $regToken.Token
+$regToken = Get-AzWvdHostPoolRegistrationToken -ResourceGroupName $resourceGroupname -HostPoolName $hostPoolName
     
+if ($null -eq $regToken.Token) {
+    write-output "Generating a new Registration Token"
+    # $hostPool = Get-AzWvdHostPool -ResourceGroupName $resourceGroupName -HostPoolName $hostPoolName
+    $expirationTime = (Get-Date).AddHours(1.5).ToUniversalTime() | Get-Date -Format "yyyy-MM-dd HH:mm"
+    $regToken = New-AzWvdRegistrationInfo -ResourceGroupName $resourceGroupName -HostPoolName $hostPoolName -ExpirationTime $expirationTime
+    # start-sleep -seconds 5
+    if ($null -eq $regToken.Token) {
+        write-error "There was an error creating a registration token. This operation will not complete successfully."
+    }
 }
+$registrationToken = $regToken.Token
 
-$registrationToken = get-registrationkey -hostPoolName $hostPoolName -resourceGroupName $resourceGroupName
 $configUrl = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip"
 $configFunction = "Configuration.ps1\AddSessionHost"
 

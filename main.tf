@@ -51,6 +51,7 @@ resource "azurerm_virtual_network" "test_vnet" {
   name                = "test-avd-vnet"
   resource_group_name = azurerm_resource_group.avd.name
   address_space       = [cidrsubnet("10.0.0.0/16", 0, 0)]
+  dns_servers         = ["10.0.0.17", "8.8.8.8"]
 }
 
 resource "azurerm_subnet" "test-avd-subnet" {
@@ -94,46 +95,88 @@ module "shared_image" {
 }
 
 #Storage Account
-module "storage_account" {
-  source                              = "./modules/storage_account"
-  location                            = azurerm_resource_group.avd.location
-  resource_group_name                 = azurerm_resource_group.avd.name
-  pe_subnet_id                        = azurerm_subnet.test-avd-subnet.id
-  smb_contributor_group_name          = var.storage_account.smb_contributor_group_name
-  smb_elevated_contributor_group_name = var.storage_account.smb_elevated_contributor_group_name
-  storage_account_name                = var.storage_account.storage_account_name
-  storage_account_share               = var.storage_account_share
-  # storage_account_share = {
-  #   # for_each = var.storage_account.share
-  #   "share_1" = {
-  #     name  = "fslogix-network"
-  #     quota = 300
-  #   }
-  #   "share_2" = {
-  #     name  = "fslogix-sap"
-  #     quota = 300
-  #   }
-  # }
-}
+# module "storage_account" {
+#   source                              = "./modules/storage_account"
+#   location                            = azurerm_resource_group.avd.location
+#   resource_group_name                 = azurerm_resource_group.avd.name
+#   pe_subnet_id                        = azurerm_subnet.test-avd-subnet.id
+#   smb_contributor_group_name          = var.storage_account.smb_contributor_group_name
+#   smb_elevated_contributor_group_name = var.storage_account.smb_elevated_contributor_group_name
+#   storage_account_name                = var.storage_account.storage_account_name
+#   storage_account_share               = var.storage_account_share
+#   # storage_account_share = {
+#   #   # for_each = var.storage_account.share
+#   #   "share_1" = {
+#   #     name  = "fslogix-network"
+#   #     quota = 300
+#   #   }
+#   #   "share_2" = {
+#   #     name  = "fslogix-sap"
+#   #     quota = 300
+#   #   }
+#   # }
+# }
 
 module "monitoring" {
   source                              = "./modules/monitoring"
   location                            = azurerm_resource_group.avd.location
   resource_group_name                 = azurerm_resource_group.avd.name
   policy_assignment_resource_group_id = azurerm_resource_group.avd.id
-  law_name                            = "law-avd"
-  managed_identity_name               = "avd-automation"
+  law_name                            = "law-avd"        # Should be variablized.
+  managed_identity_name               = "avd-automation" # This creates a managed identity. It should probably be pulled out to the main module as it is used by Automation module as well.
   subscription_id                     = data.azurerm_client_config.current.subscription_id
 }
 
 module "updates" {
+  # for_each                      = var.maintenance_definition
   source                        = "./modules/vm_updates"
   resource_group_id             = azurerm_resource_group.avd.id
   managed_identity_id           = module.monitoring.managed_identity_id
   managed_identity_principal_id = module.monitoring.managed_identity_principal_id
   location                      = azurerm_resource_group.avd.location
   resource_group_name           = azurerm_resource_group.avd.name
+  policy_target_locations       = var.policy_target_locations
+  maintenance_definition        = var.maintenance_definition
+  # maintenance_name              = each.value.maintenance_name
+  # maintenance_scope             = each.value.maintenance_scope
+  # maintenance_duration          = each.value.maintenance_duration
+  # maintenance_start_date_time   = each.value.maintenance_start_date_time
+  # maintenance_end_date_time     = each.value.maintenance_end_date_time
+  # maintenance_recurrence        = each.value.maintenance_recurrence
+  # maintenance_time_zone         = each.value.maintenance_time_zone
+}
 
+module "automation" {
+  source                      = "./modules/automation"
+  location                    = azurerm_resource_group.avd.location
+  resource_group_name         = azurerm_resource_group.avd.name
+  automation_account_name     = "AVD-Automation"
+  automation_account_sku_name = "Basic"
+  identity = [{
+    identity_ids = [module.monitoring.managed_identity_id]
+  identity_type = "UserAssigned" }]
+  runbooks                      = var.automation_runbooks
+  tenant_id                     = var.tenant_id
+  keyvault_name                 = var.keyvault_name
+  domain_join_password          = var.domain_join_password
+  managed_identity_principal_id = module.monitoring.managed_identity_principal_id
+}
+
+output "keyvault_name" {
+  value = module.automation.keyvault_name
+}
+
+output "keyvault_secret" {
+  value = module.automation.keyvault_secret
+}
+
+output "managed_identity_object_id" {
+  value = module.monitoring.managed_identity_id
+}
+
+output "webhook_uri" {
+  value     = module.automation.webhook_url
+  sensitive = true
 }
 
 
@@ -177,50 +220,38 @@ module "updates" {
 # }
 
 
-locals {
-  runbooks = {
-    "enableScalingPlan" = {
-      file_name = "enableScalingPlan.ps1"
-      webhook   = true
-      type      = "PowerShell72"
-    }
-    "disableScalingPlan" = {
-      file_name = "disableScalingPlan.ps1"
-      webhook   = true
-      type      = "PowerShell72"
-    }
-    "createHost" = {
-      file_name = "createHost.ps1"
-      webhook   = true
-      type      = "PowerShell72"
-    }
-    "addHostToSessionPoolDSC" = {
-      file_name = "addHostToPoolDSC.ps1"
-      webhook   = true
-      type      = "PowerShell72"
-    }
-    "addHostToDomain" = {
-      file_name = "addHostToDomain.ps1"
-      webhook   = true
-      type      = "PowerShell72"
-    }
-  }
-}
+# locals {
+#   runbooks = {
+#     "enableScalingPlan" = {
+#       file_name = "enableScalingPlan.ps1"
+#       webhook   = true
+#       type      = "PowerShell72"
+#     }
+#     "disableScalingPlan" = {
+#       file_name = "disableScalingPlan.ps1"
+#       webhook   = true
+#       type      = "PowerShell72"
+#     }
+#     "createHost" = {
+#       file_name = "createHost.ps1"
+#       webhook   = true
+#       type      = "PowerShell72"
+#     }
+#     "addHostToSessionPoolDSC" = {
+#       file_name = "addHostToPoolDSC.ps1"
+#       webhook   = true
+#       type      = "PowerShell72"
+#     }
+#     "addHostToDomain" = {
+#       file_name = "addHostToDomain.ps1"
+#       webhook   = true
+#       type      = "PowerShell72"
+#     }
+#     "createRemediationTasks" = {
+#       file_name = "createRemediationTasks.ps1"
+#       webhook   = true
+#       type      = "PowerShell72"
+#     }
+#   }
+# }
 
-module "automation" {
-  source                      = "./modules/automation"
-  location                    = azurerm_resource_group.avd.location
-  resource_group_name         = azurerm_resource_group.avd.name
-  automation_account_name     = "AVD-Automation"
-  automation_account_sku_name = "Basic"
-  identity = [{
-    identity_ids = [module.monitoring.managed_identity_id]
-  identity_type = "UserAssigned" }]
-  runbooks = local.runbooks
-}
-
-output "webhook_uri" {
-  value     = module.automation.webhook_url
-  sensitive = true
-
-}

@@ -51,6 +51,7 @@ resource "azurerm_automation_webhook" "webhook" {
   lifecycle {
     ignore_changes = [expiry_time]
   }
+  depends_on = [azurerm_automation_runbook.runbook]
 }
 
 resource "azurerm_automation_module" "az_compute" {
@@ -82,6 +83,47 @@ resource "azurerm_automation_module" "az_compute" {
 #   }
 #   depends_on = [azurerm_automation_account.automation, azurerm_automation_runbook.runbook]
 # }
+
+resource "azurerm_key_vault" "key_vault" {
+  resource_group_name       = var.resource_group_name
+  location                  = var.location
+  name                      = var.keyvault_name
+  sku_name                  = "standard"
+  tenant_id                 = var.tenant_id
+  enable_rbac_authorization = true
+}
+
+resource "azurerm_key_vault_secret" "secret" {
+  name         = var.keyvault_secret_name
+  key_vault_id = azurerm_key_vault.key_vault.id
+  value        = var.domain_join_password
+  depends_on   = [azurerm_role_assignment.tf_read_write_key_vault]
+
+}
+
+data "azurerm_client_config" "current" {}
+
+
+resource "azurerm_role_assignment" "tf_read_write_key_vault" {
+  scope                = azurerm_key_vault.key_vault.id
+  role_definition_name = "Key Vault Secrets Officer"
+  principal_id         = data.azurerm_client_config.current.object_id
+}
+
+resource "azurerm_role_assignment" "managed_identity_read_write_key_vault" {
+  scope                = azurerm_key_vault.key_vault.id
+  role_definition_name = "Key Vault Secrets User"
+  principal_id         = var.managed_identity_principal_id
+}
+
+
+output "keyvault_name" {
+  value = azurerm_key_vault.key_vault.name
+}
+
+output "keyvault_secret" {
+  value = azurerm_key_vault_secret.secret.name
+}
 
 output "webhook_url" {
   value = toset([for k in azurerm_automation_webhook.webhook : join(" => ", [k.name, k.uri])])

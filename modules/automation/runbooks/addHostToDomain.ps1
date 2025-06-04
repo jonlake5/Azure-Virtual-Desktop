@@ -10,26 +10,20 @@ $vmName = $inputData.vmName
 $domainName = $inputData.domainName
 $ouPath = $inputData.ouPath
 $user = $inputData.user
-$password = $inputData.password
+$vaultName = $inputData.vaultName
+$secretName = $inputData.secretName
 
 $null = Connect-AzAccount -Identity -AccountId $accountID
 
+$password = (Get-AzKeyVaultSecret -vaultName $vaultName -Name $secretName).secretValue | ConvertFrom-SecureString -AsPlainText
 
 
-Set-AzVMExtension `
-    -ResourceGroupName $resourceGroupName `
-    -VMName $vmName `
-    -Name "domain-Join" `
-    -Publisher "Microsoft.Compute" `
-    -ExtensionType "JsonADDomainExtension" `
-    -TypeHandlerVersion "1.3" `
-    -Settings @{
-    Name    = $domainName
-    OUPath  = $ouPath
-    User    = $user
-    Restart = $true
-    Options = "3"    
-} `
-    -ProtectedSettings @{
-    Password = $password
-}
+
+write-output "Domain Name is $domainName"
+write-output "ouPath is $ouPath"
+write-output "user is $user"
+
+[securestring]$secStringPassword = ConvertTo-SecureString $password -AsPlainText -Force
+[pscredential]$credential = New-Object System.Management.Automation.PSCredential ($user, $secStringPassword)
+
+Set-AzVMADDomainExtension -Name "domain-join" -DomainName $domainName -OUPath $ouPath -VMName $vMName -Credential $credential -ResourceGroupName $ResourceGroupName -JoinOption 0x00000003 -Restart -Verbose

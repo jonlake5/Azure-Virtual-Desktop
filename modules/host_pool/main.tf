@@ -38,13 +38,13 @@ resource "azurerm_virtual_desktop_host_pool" "avd" {
 }
 
 
-resource "azurerm_virtual_desktop_host_pool_registration_info" "avd" {
-  hostpool_id     = azurerm_virtual_desktop_host_pool.avd.id
-  expiration_date = timeadd(timestamp(), "${var.registration_key_valid_hours}h")
-  lifecycle {
-    ignore_changes = [expiration_date]
-  }
-}
+# resource "azurerm_virtual_desktop_host_pool_registration_info" "avd" {
+#   hostpool_id     = azurerm_virtual_desktop_host_pool.avd.id
+#   expiration_date = timeadd(timestamp(), "${var.registration_key_valid_hours}h")
+#   lifecycle {
+#     ignore_changes = [expiration_date]
+#   }
+# }
 
 resource "azurerm_virtual_desktop_scaling_plan" "weekdays" {
   count               = var.scaling_plan_schedule == null ? 0 : 1
