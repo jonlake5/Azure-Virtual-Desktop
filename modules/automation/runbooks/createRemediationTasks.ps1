@@ -24,7 +24,7 @@ if ($null -eq $assignments) {
 foreach ($assignment in $assignments) {
     $remediationAssignmentName = "remediation_$($assignment.Name.replace(' ',''))_$(Get-Date -Format 'yyyyMMddHHmm')"
     if ($null -in @($assignment.Id, $resourceGroup.ResourceGroupName)) {
-        throw "AssignmentID or ResourceGroup were not found`n`nResource Group: $($resourceGroup.ResourceGroupName)`n`nAssignmentId: $($assignment.Id)"
+        throw "AssignmentID or ResourceGroup were not found`n`n  Resource Group: $($resourceGroup.ResourceGroupName)`n`n  AssignmentId: $($assignment.Id)"
     }
     $remediationParams = @{
         Name               = $remediationAssignmentName
