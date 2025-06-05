@@ -123,8 +123,20 @@ variable "storage_account" {
       name  = string
       quota = number
     }))
+    directory_config = map(object({
+      directory_type = optional(string)
+      active_directory_config = object({
+        domain_guid         = optional(string)
+        domain_name         = optional(string)
+        domain_sid          = optional(string)
+        forest_name         = optional(string)
+        netbios_domain_name = optional(string)
+        storage_sid         = optional(string)
+      })
+    }))
   })
 }
+
 
 variable "tenant_id" {
   type        = string

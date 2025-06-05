@@ -92,6 +92,3 @@ module "application_group" {
   location                                 = azurerm_resource_group.avd.location
   host_pool_id                             = module.host_pool["${each.value.environment}.${each.value.host_pool_key}"].hostpool_id
 }
-
-
-

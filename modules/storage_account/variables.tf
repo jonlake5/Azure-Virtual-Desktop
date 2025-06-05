@@ -1,3 +1,17 @@
+variable "directory_config" {
+  type = map(object({
+    directory_type = optional(string)
+    active_directory_config = object({
+      domain_guid         = optional(string)
+      domain_name         = optional(string)
+      domain_sid          = optional(string)
+      forest_name         = optional(string)
+      netbios_domain_name = optional(string)
+      storage_sid         = optional(string)
+    })
+  }))
+}
+
 variable "location" {
   type        = string
   description = "Location of the shared image gallery"

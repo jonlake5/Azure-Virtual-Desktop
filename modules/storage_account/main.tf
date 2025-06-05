@@ -6,6 +6,23 @@ resource "azurerm_storage_account" "avd" {
   location                      = var.location
   name                          = var.storage_account_name
   public_network_access_enabled = var.storage_account_public_network_access_enabled
+  dynamic "azure_files_authentication" {
+    for_each = var.directory_config
+    content {
+      directory_type = azure_files_authentication.value.directory_type
+      dynamic "active_directory" {
+        for_each = var.directory_config
+        content {
+          domain_guid         = active_directory.value.active_directory_config.domain_guid
+          domain_name         = active_directory.value.active_directory_config.domain_name
+          domain_sid          = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.domain_sid : null
+          forest_name         = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.forest_name : null
+          netbios_domain_name = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.netbios_domain_name : null
+          storage_sid         = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.storage_sid : null
+        }
+      }
+    }
+  }
 }
 
 resource "azurerm_storage_account_network_rules" "avd" {

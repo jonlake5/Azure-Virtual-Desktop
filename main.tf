@@ -94,17 +94,18 @@ module "shared_image" {
   depends_on                = [module.shared_image_gallery]
 }
 
-# # #Storage Account
-# module "storage_account" {
-#   source                              = "./modules/storage_account"
-#   location                            = azurerm_resource_group.avd.location
-#   resource_group_name                 = azurerm_resource_group.avd.name
-#   pe_subnet_id                        = azurerm_subnet.test-avd-subnet.id
-#   smb_contributor_group_name          = var.storage_account.smb_contributor_group_name
-#   smb_elevated_contributor_group_name = var.storage_account.smb_elevated_contributor_group_name
-#   storage_account_name                = var.storage_account.storage_account_name
-#   storage_account_share               = var.storage_account.storage_account_share
-# }
+# #Storage Account
+module "storage_account" {
+  source                              = "./modules/storage_account"
+  location                            = azurerm_resource_group.avd.location
+  resource_group_name                 = azurerm_resource_group.avd.name
+  pe_subnet_id                        = azurerm_subnet.test-avd-subnet.id
+  smb_contributor_group_name          = var.storage_account.smb_contributor_group_name
+  smb_elevated_contributor_group_name = var.storage_account.smb_elevated_contributor_group_name
+  storage_account_name                = var.storage_account.storage_account_name
+  storage_account_share               = var.storage_account.storage_account_share
+  directory_config                    = var.storage_account.directory_config
+}
 
 module "monitoring" {
   source                              = "./modules/monitoring"
