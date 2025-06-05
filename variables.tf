@@ -115,6 +115,12 @@ variable "policy_target_locations" {
   description = "A list of locations to target for the policy assignments for VMs"
 }
 
+variable "session_host_groups" {
+  type        = list(string)
+  description = "A list of groups that are used to provide apps to session hosts that are entra joined"
+  default     = []
+}
+
 variable "storage_account" {
   type = object({
     smb_contributor_group_name          = string
@@ -143,3 +149,5 @@ variable "tenant_id" {
   type        = string
   description = "Tenant ID of azure account"
 }
+
+

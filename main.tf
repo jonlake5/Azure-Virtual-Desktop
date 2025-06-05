@@ -63,8 +63,11 @@ resource "azurerm_subnet" "test-avd-subnet" {
 
 # Role Assignments
 module "role_assignments" {
-  source          = "./modules/avd_role_assignments"
-  subscription_id = data.azurerm_client_config.current.subscription_id
+  source              = "./modules/avd_role_assignments"
+  resource_group_name = azurerm_resource_group.avd.name
+  subscription_id     = data.azurerm_client_config.current.subscription_id
+  session_host_groups = var.session_host_groups
+
 }
 
 # Shared Image Gallery
@@ -171,3 +174,4 @@ output "webhook_uri" {
   value     = module.automation.webhook_url
   sensitive = true
 }
+
