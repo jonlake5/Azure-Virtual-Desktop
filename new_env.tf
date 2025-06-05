@@ -41,12 +41,11 @@ locals {
 }
 
 module "host_pool" {
-  source = "./modules/host_pool"
-
-  for_each = local.flattened_host_pools
-
+  source                     = "./modules/host_pool"
+  for_each                   = local.flattened_host_pools
   resource_group_name        = azurerm_resource_group.avd.name
   location                   = azurerm_resource_group.avd.location
+  custom_rdp_properties      = each.value.host_pool.custom_rdp_properties
   load_balancer_type         = each.value.host_pool.load_balancer_type
   host_pool_friendly_name    = each.value.host_pool.host_pool_friendly_name
   host_pool_name             = each.value.host_pool.host_pool_name

@@ -1,3 +1,8 @@
+variable "custom_rdp_properties" {
+  type = string
+  # nullable = true
+}
+
 variable "host_pool_friendly_name" {
   type        = string
   description = "Friendly name of the host pool"
