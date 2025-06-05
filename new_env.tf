@@ -1,3 +1,16 @@
+#Use the below block to create a host group for all hosts in this host pool
+
+resource "azuread_group" "avd_hosts" {
+  for_each         = var.dynamic_host_groups
+  display_name     = each.value.groupName
+  security_enabled = true
+  types            = ["DynamicMembership"]
+  dynamic_membership {
+    enabled = true
+    rule    = "device.displayName -like ${each.value.groupFilterSubstring}"
+  }
+}
+
 # #Workspace
 module "workspace" {
   source                     = "./modules/avd_workspace"

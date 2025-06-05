@@ -1,16 +1,3 @@
-#Use the below block to create a host group for all hosts in this host pool
-
-# resource "azuread_group" "avd_hosts" {
-#   display_name     = "ENT-AVD-NOV-SESSION-HOSTS"
-#   security_enabled = true
-#   types            = ["DynamicMembership"]
-#   dynamic_membership {
-#     enabled = true
-#     rule    = "device.systemLabels -any _ -eq \"AzureVirtualDesktop\""
-#   }
-# }
-
-
 resource "azurerm_virtual_desktop_host_pool" "avd" {
   location                 = var.location
   resource_group_name      = var.resource_group_name

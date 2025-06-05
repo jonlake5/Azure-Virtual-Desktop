@@ -16,6 +16,7 @@ variable "host_pool_type" {
     error_message = "Value must contain one of (Pooled, Personal)"
   }
 }
+
 variable "load_balancer_type" {
   type        = string
   description = "Type of load balancing of user sessions on the host pool"
@@ -23,7 +24,6 @@ variable "load_balancer_type" {
     condition     = contains(["BreadthFirst", "DepthFirst", "Persistent"], var.load_balancer_type)
     error_message = "Value must contain one of (BreadthFirst, DepthFirst, Persistent)"
   }
-
 }
 
 variable "location" {

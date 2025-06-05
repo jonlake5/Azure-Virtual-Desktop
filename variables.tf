@@ -13,6 +13,16 @@ variable "domain_join_password" {
   sensitive   = true
 }
 
+variable "dynamic_host_groups" {
+  type = map(object({
+    groupName            = string
+    groupFilterSubstring = string
+  }))
+  description = "Objects that will be used to create Entra Dynamic Host Groups"
+  default     = {}
+}
+
+
 variable "environments" {
   type = map(object({
     workspace = object({
