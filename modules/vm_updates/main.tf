@@ -97,7 +97,7 @@ resource "azurerm_policy_definition" "vm_update_check_custom" {
     }
 PARAMS
   metadata = jsonencode({
-    category = "Azure Update Managerr"
+    category = "Azure Update Manager"
     version  = "1.0.0"
   })
 

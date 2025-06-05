@@ -116,16 +116,16 @@ resource "azurerm_resource_group_policy_assignment" "associate_dcr" {
 PARAMS
 }
 
-resource "azurerm_resource_group_policy_assignment" "system_assigned_identity" {
-  name                 = "Enable System Assigned Identity"
-  resource_group_id    = var.policy_assignment_resource_group_id
-  location             = var.location
-  policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/17b3de92-f710-4cf4-aa55-0e7859f1ed7b"
-  identity {
-    type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.monitoring.id]
-  }
-}
+# resource "azurerm_resource_group_policy_assignment" "system_assigned_identity" {
+#   name                 = "Enable System Assigned Identity"
+#   resource_group_id    = var.policy_assignment_resource_group_id
+#   location             = var.location
+#   policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/17b3de92-f710-4cf4-aa55-0e7859f1ed7b"
+#   identity {
+#     type         = "UserAssigned"
+#     identity_ids = [azurerm_user_assigned_identity.monitoring.id]
+#   }
+# }
 
 # resource "azurerm_resource_group_policy_assignment" "vm_app_insights" {
 #   name                 = "Configure VM App Insights"

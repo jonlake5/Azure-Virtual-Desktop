@@ -95,17 +95,17 @@ module "shared_image" {
 }
 
 # #Storage Account
-module "storage_account" {
-  source                              = "./modules/storage_account"
-  location                            = azurerm_resource_group.avd.location
-  resource_group_name                 = azurerm_resource_group.avd.name
-  pe_subnet_id                        = azurerm_subnet.test-avd-subnet.id
-  smb_contributor_group_name          = var.storage_account.smb_contributor_group_name
-  smb_elevated_contributor_group_name = var.storage_account.smb_elevated_contributor_group_name
-  storage_account_name                = var.storage_account.storage_account_name
-  storage_account_share               = var.storage_account.storage_account_share
-  directory_config                    = var.storage_account.directory_config
-}
+# module "storage_account" {
+#   source                              = "./modules/storage_account"
+#   location                            = azurerm_resource_group.avd.location
+#   resource_group_name                 = azurerm_resource_group.avd.name
+#   pe_subnet_id                        = azurerm_subnet.test-avd-subnet.id
+#   smb_contributor_group_name          = var.storage_account.smb_contributor_group_name
+#   smb_elevated_contributor_group_name = var.storage_account.smb_elevated_contributor_group_name
+#   storage_account_name                = var.storage_account.storage_account_name
+#   storage_account_share               = var.storage_account.storage_account_share
+#   directory_config                    = var.storage_account.directory_config
+# }
 
 module "monitoring" {
   source                              = "./modules/monitoring"
@@ -115,6 +115,13 @@ module "monitoring" {
   law_name                            = "law-avd"        # Should be variablized.
   managed_identity_name               = "avd-automation" # This creates a managed identity. It should probably be pulled out to the main module as it is used by Automation module as well.
   subscription_id                     = data.azurerm_client_config.current.subscription_id
+}
+
+module "policies" {
+  source              = "./modules/policies"
+  managed_identity_id = module.monitoring.managed_identity_id
+  resource_group_name = azurerm_resource_group.avd.name
+  location            = azurerm_resource_group.avd.location
 }
 
 module "updates" {
