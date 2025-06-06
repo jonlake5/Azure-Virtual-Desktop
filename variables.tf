@@ -97,6 +97,12 @@ variable "keyvault_name" {
   description = "Name or keyvault used to store secret of domain join password"
 }
 
+variable "log_analytics_workspace_name" {
+  type        = string
+  description = "Name of the log analytics workspace to be created"
+  default     = "law-avd"
+}
+
 variable "maintenance_definition" {
   type = map(object({
     maintenance_name                 = string
@@ -110,6 +116,11 @@ variable "maintenance_definition" {
   }))
 }
 
+variable "managed_identity_name" {
+  type        = string
+  description = "Name of managed identity to create. This will be granted contributor roles on the sub"
+  default     = "avd-automation"
+}
 variable "policy_target_locations" {
   type        = list(string)
   description = "A list of locations to target for the policy assignments for VMs"
@@ -149,4 +160,18 @@ variable "tenant_id" {
   description = "Tenant ID of azure account"
 }
 
+variable "vnet_ip_space" {
+  type        = string
+  description = "IP Space for the vnet"
+}
+
+variable "vnet_dns_servers" {
+  type        = list(string)
+  description = "DNS servers for vnet"
+}
+
+variable "vnet_name" {
+  type        = string
+  description = "Name of the vNet to be created"
+}
 

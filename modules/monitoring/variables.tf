@@ -13,16 +13,16 @@ variable "location" {
   description = "Location of the shared image gallery"
 }
 
-variable "managed_identity_name" {
+variable "managed_identity_id" {
   type        = string
-  description = "Name of the Managed Identity"
+  description = "Managed Identity Id for policy remediation"
+
 }
 
 variable "policy_assignment_resource_group_id" {
   type        = string
   description = "Resource Group Id to assign the policy to"
 }
-
 
 variable "resource_group_name" {
   type        = string

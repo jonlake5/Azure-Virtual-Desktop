@@ -6,11 +6,6 @@ resource "azurerm_log_analytics_workspace" "workspace" {
   name                = var.law_name
 }
 
-resource "azurerm_user_assigned_identity" "monitoring" {
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  name                = var.managed_identity_name
-}
 
 resource "azurerm_resource_group_policy_assignment" "ama_install" {
   name                 = var.ama_install_policy_assignment_name
@@ -19,7 +14,7 @@ resource "azurerm_resource_group_policy_assignment" "ama_install" {
   policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/ca817e41-e85a-4783-bc7f-dc532d36235e"
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.monitoring.id]
+    identity_ids = [var.managed_identity_id]
   }
   parameters = <<PARAMS
 {
@@ -102,7 +97,7 @@ resource "azurerm_resource_group_policy_assignment" "associate_dcr" {
   policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/eab1f514-22e3-42e3-9a1f-e1dc9199355c"
   identity {
     type         = "UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.monitoring.id]
+    identity_ids = [var.managed_identity_id]
   }
   parameters = <<PARAMS
   {
@@ -116,52 +111,9 @@ resource "azurerm_resource_group_policy_assignment" "associate_dcr" {
 PARAMS
 }
 
-# resource "azurerm_resource_group_policy_assignment" "system_assigned_identity" {
-#   name                 = "Enable System Assigned Identity"
-#   resource_group_id    = var.policy_assignment_resource_group_id
-#   location             = var.location
-#   policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/17b3de92-f710-4cf4-aa55-0e7859f1ed7b"
-#   identity {
-#     type         = "UserAssigned"
-#     identity_ids = [azurerm_user_assigned_identity.monitoring.id]
-#   }
-# }
 
-# resource "azurerm_resource_group_policy_assignment" "vm_app_insights" {
-#   name                 = "Configure VM App Insights"
-#   resource_group_id    = var.policy_assignment_resource_group_id
-#   location             = var.location
-#   policy_definition_id = "/providers/Microsoft.Authorization/policyDefinitions/e6421995-539a-4ce3-854b-1c88534396cf"
-#   parameters           = <<PARAMS
-# {
-# "categoryGroup": {
-#   value: "allLogs"
-#   }
-# }
-# PARAMS
-# }
-
-
-locals {
-  subscription_scope = "/subscriptions/${var.subscription_id}"
-}
-
-resource "azurerm_role_assignment" "contributor" {
-
-  scope                = local.subscription_scope
-  principal_id         = azurerm_user_assigned_identity.monitoring.principal_id
-  role_definition_name = "Contributor"
-}
 
 output "log_analytics_workspace_id" {
   value = azurerm_log_analytics_workspace.workspace.id
 }
-output "managed_identity_id" {
-  value = azurerm_user_assigned_identity.monitoring.id
-}
-
-output "managed_identity_principal_id" {
-  value = azurerm_user_assigned_identity.monitoring.principal_id
-}
-
 
