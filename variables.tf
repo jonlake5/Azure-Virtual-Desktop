@@ -98,6 +98,12 @@ variable "keyvault_name" {
   description = "Name or keyvault used to store secret of domain join password"
 }
 
+variable "keyvault_secret_name" {
+  type        = string
+  default     = "domain-join-password"
+  description = "Name of the keyvault secret used to join the domain. Default is avd-keyvault"
+}
+
 variable "location" {
   type        = string
   description = "Azure region that all the reources will be placed in"

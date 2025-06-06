@@ -34,7 +34,7 @@ variable "keyvault_name" {
 variable "keyvault_secret_name" {
   type        = string
   description = "Name of Key Vault secret that holds the domain join password"
-  default     = "domain-join-password"
+
 }
 variable "location" {
   type        = string

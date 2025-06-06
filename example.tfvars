@@ -1,10 +1,10 @@
 # Environment configuration. This region is where all of the resources will be placed. The tenant is the Entra tenant associated with the subscription.
 location            = "northcentralus"
-tenant_id = "6d7e2966-adf8-4593-9945-d9ec3af61a7c"
+tenant_id = "6d7e2966-xxxx-xxxx-xxxx-d9ec3af61a7c"
 
 # These are the basic constructs needed. They should be self explanatory but each of these will create exactly (1) resource of type: Resource Group, vNet, and subnet
 resource_group_name = "rg-testing-avd-modules"
-subscription_id     = "074f4b99-ea66-4a73-a146-d342db9d1e92"
+subscription_id     = "074f4b99-xxxx-xxxx-xxxx-xxxxdb9d1e92"
 
 vnet_ip_space       = "10.0.0.0/16"
 vnet_name           = "test-avd-vnet"
@@ -58,7 +58,7 @@ dynamic_host_groups = {
     groupName = "EntraGroupName"
     groupFilterSubstring = "my-device-substring"
   }
-# }
+}
 
 
 # This is the bulk of environment creation.

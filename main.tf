@@ -94,6 +94,7 @@ module "automation" {
   runbooks                      = var.automation_runbooks
   tenant_id                     = var.tenant_id
   keyvault_name                 = var.keyvault_name
+  keyvault_secret_name          = var.keyvault_secret_name
   domain_join_password          = var.domain_join_password
   managed_identity_principal_id = module.managed_identity.managed_identity_principal_id
 }
@@ -185,8 +186,17 @@ output "managed_identity_object_id" {
   value = module.managed_identity.managed_identity_id
 }
 
+output "user_assigned_managed_identity_account_id" {
+  value = module.managed_identity.managed_identity_principal_id
+}
+
 output "maintenance_config_name" {
   value = module.updates.maintenance_config_name
+}
+
+output "webhook_uri" {
+  value     = module.automation.webhook_url
+  sensitive = true
 }
 
 output "packer_variables" {
@@ -205,7 +215,3 @@ vm_size = "Standard_B2as_v2"
 PACKER
 }
 
-output "webhook_uri" {
-  value     = module.automation.webhook_url
-  sensitive = true
-}
