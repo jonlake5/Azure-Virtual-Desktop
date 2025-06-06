@@ -81,3 +81,10 @@ resource "azurerm_private_endpoint" "file_storage" {
     subresource_names              = ["file"]
   }
 }
+
+output "name" {
+  value = azurerm_storage_account.avd.name
+}
+output "private_endpoint_ip_address" {
+  value = azurerm_private_endpoint.file_storage.private_service_connection[0].private_ip_address
+}

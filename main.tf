@@ -61,6 +61,45 @@ resource "azurerm_subnet" "test-avd-subnet" {
   resource_group_name  = azurerm_resource_group.avd.name
 }
 
+resource "azurerm_private_dns_zone_virtual_network_link" "file" {
+  name                  = "link_avd_vnet"
+  resource_group_name   = azurerm_resource_group.avd.name
+  private_dns_zone_name = azurerm_private_dns_zone.file.name
+  virtual_network_id    = azurerm_virtual_network.test_vnet.id
+}
+
+resource "azurerm_private_dns_zone" "file" {
+  name                = "privatelink.file.core.windows.net"
+  resource_group_name = azurerm_resource_group.avd.name
+}
+
+resource "azurerm_private_dns_a_record" "storage_pe" {
+  name                = module.storage_account.name
+  ttl                 = 5
+  records             = toset([module.storage_account.private_endpoint_ip_address])
+  resource_group_name = azurerm_resource_group.avd.name
+  zone_name           = azurerm_private_dns_zone.file.name
+  depends_on          = [azurerm_private_dns_zone.file]
+
+}
+
+
+module "automation" {
+  source                      = "./modules/automation"
+  location                    = azurerm_resource_group.avd.location
+  resource_group_name         = azurerm_resource_group.avd.name
+  automation_account_name     = "AVD-Automation"
+  automation_account_sku_name = "Basic"
+  identity = [{
+    identity_ids = [module.monitoring.managed_identity_id]
+  identity_type = "UserAssigned" }]
+  runbooks                      = var.automation_runbooks
+  tenant_id                     = var.tenant_id
+  keyvault_name                 = var.keyvault_name
+  domain_join_password          = var.domain_join_password
+  managed_identity_principal_id = module.monitoring.managed_identity_principal_id
+}
+
 # Role Assignments
 module "role_assignments" {
   source              = "./modules/avd_role_assignments"
@@ -97,18 +136,7 @@ module "shared_image" {
   depends_on                = [module.shared_image_gallery]
 }
 
-# #Storage Account
-# module "storage_account" {
-#   source                              = "./modules/storage_account"
-#   location                            = azurerm_resource_group.avd.location
-#   resource_group_name                 = azurerm_resource_group.avd.name
-#   pe_subnet_id                        = azurerm_subnet.test-avd-subnet.id
-#   smb_contributor_group_name          = var.storage_account.smb_contributor_group_name
-#   smb_elevated_contributor_group_name = var.storage_account.smb_elevated_contributor_group_name
-#   storage_account_name                = var.storage_account.storage_account_name
-#   storage_account_share               = var.storage_account.storage_account_share
-#   directory_config                    = var.storage_account.directory_config
-# }
+
 
 module "monitoring" {
   source                              = "./modules/monitoring"
@@ -127,6 +155,20 @@ module "policies" {
   location            = azurerm_resource_group.avd.location
 }
 
+#Storage Account
+module "storage_account" {
+  source                              = "./modules/storage_account"
+  location                            = azurerm_resource_group.avd.location
+  resource_group_name                 = azurerm_resource_group.avd.name
+  pe_subnet_id                        = azurerm_subnet.test-avd-subnet.id
+  smb_contributor_group_name          = var.storage_account.smb_contributor_group_name
+  smb_elevated_contributor_group_name = var.storage_account.smb_elevated_contributor_group_name
+  storage_account_name                = var.storage_account.storage_account_name
+  storage_account_share               = var.storage_account.storage_account_share
+  directory_config                    = var.storage_account.directory_config
+
+}
+
 module "updates" {
   source                        = "./modules/vm_updates"
   resource_group_id             = azurerm_resource_group.avd.id
@@ -138,21 +180,7 @@ module "updates" {
   maintenance_definition        = var.maintenance_definition
 }
 
-module "automation" {
-  source                      = "./modules/automation"
-  location                    = azurerm_resource_group.avd.location
-  resource_group_name         = azurerm_resource_group.avd.name
-  automation_account_name     = "AVD-Automation"
-  automation_account_sku_name = "Basic"
-  identity = [{
-    identity_ids = [module.monitoring.managed_identity_id]
-  identity_type = "UserAssigned" }]
-  runbooks                      = var.automation_runbooks
-  tenant_id                     = var.tenant_id
-  keyvault_name                 = var.keyvault_name
-  domain_join_password          = var.domain_join_password
-  managed_identity_principal_id = module.monitoring.managed_identity_principal_id
-}
+
 
 output "keyvault_name" {
   value = module.automation.keyvault_name
@@ -174,4 +202,3 @@ output "webhook_uri" {
   value     = module.automation.webhook_url
   sensitive = true
 }
-

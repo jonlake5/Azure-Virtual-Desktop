@@ -31,7 +31,7 @@ variable "environments" {
     })
     host_pools = map(object({
       auth_type               = string
-      custom_rdp_properties   = optional(string, "enablecredsspsupport:i:1;videoplaybackmode:i:1;audiomode:i:0;devicestoredirect:s:*;drivestoredirect:s:*;redirectclipboard:i:1;redirectcomports:i:1;redirectprinters:i:1;redirectsmartcards:i:1;redirectwebauthn:i:1;usbdevicestoredirect:s:*;use multimon:i:1")
+      custom_rdp_properties   = optional(string, "enablecredsspsupport:i:1;videoplaybackmode:i:1;audiomode:i:0;devicestoredirect:s:*;drivestoredirect:s:*;redirectclipboard:i:1;redirectcomports:i:1;redirectprinters:i:1;redirectsmartcards:i:1;redirectwebauthn:i:1;usbdevicestoredirect:s:*;use multimon:i:1;")
       load_balancer_type      = string
       host_pool_friendly_name = string
       host_pool_name          = string
@@ -126,10 +126,10 @@ variable "storage_account" {
     smb_contributor_group_name          = string
     smb_elevated_contributor_group_name = string
     storage_account_name                = string
-    storage_account_share = map(object({
+    storage_account_share = optional(map(object({
       name  = string
       quota = number
-    }))
+    })), {})
     directory_config = map(object({
       directory_type = optional(string)
       active_directory_config = object({
@@ -143,7 +143,6 @@ variable "storage_account" {
     }))
   })
 }
-
 
 variable "tenant_id" {
   type        = string
