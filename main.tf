@@ -124,19 +124,10 @@ module "shared_image" {
   location                  = azurerm_resource_group.avd.location
   resource_group_name       = azurerm_resource_group.avd.name
   shared_image_gallery_name = module.shared_image_gallery.name
-  golden_image_name         = each.value.golden_image_name
-  golden_image_vm_name      = each.value.golden_image_vm_name
-  local_admin_password      = each.value.local_admin_password
-  local_admin_username      = each.value.local_admin_password
-  subscription_id           = data.azurerm_client_config.current.subscription_id
-  subnet_id                 = azurerm_subnet.test-avd-subnet.id
   shared_image_name         = each.value.shared_image_name
   shared_image_sku          = each.value.shared_image_sku
-  shared_image_version_name = each.value.shared_image_version_name
   depends_on                = [module.shared_image_gallery]
 }
-
-
 
 module "monitoring" {
   source                              = "./modules/monitoring"
@@ -179,8 +170,6 @@ module "updates" {
   policy_target_locations       = var.policy_target_locations
   maintenance_definition        = var.maintenance_definition
 }
-
-
 
 output "keyvault_name" {
   value = module.automation.keyvault_name
