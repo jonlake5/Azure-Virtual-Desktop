@@ -189,6 +189,22 @@ output "maintenance_config_name" {
   value = module.updates.maintenance_config_name
 }
 
+output "packer_variables" {
+  value = <<PACKER
+subscription_id = "${data.azurerm_client_config.current.subscription_id}"
+resource_group = "${var.resource_group_name}"
+location = "${azurerm_resource_group.avd.location}"
+image_gallery_name = "${var.shared_image_gallery_name}"
+image_definition_name =  "${join(" | ", [for k, v in var.images : v.shared_image_name])}" #<---- Choose One
+uami_object_id = "${module.managed_identity.managed_identity_id}"
+new_image_version = "<version_desired_for_new_image>" #format is x.x.x
+image_publisher = "microsoftwindowsdesktop"
+image_offer = "windows-11"
+image_sku = "win11-24h2-avd"
+vm_size = "Standard_B2as_v2"
+PACKER
+}
+
 output "webhook_uri" {
   value     = module.automation.webhook_url
   sensitive = true

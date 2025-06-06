@@ -88,9 +88,8 @@ variable "environments" {
 
 variable "images" {
   type = map(object({
-    shared_image_name         = string
-    shared_image_sku          = string
-    shared_image_version_name = string
+    shared_image_name = string
+    shared_image_sku  = string
   }))
 }
 
