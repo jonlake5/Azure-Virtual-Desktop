@@ -1,3 +1,15 @@
+variable "automation_account_name" {
+  type        = string
+  description = "Name of the automation account"
+  default     = "AVD-Automation"
+}
+
+variable "automation_account_sku" {
+  type        = string
+  description = "SKU of the automation account"
+  default     = "Basic"
+}
+
 variable "automation_runbooks" {
   type = map(object({
     file_name = string
@@ -76,25 +88,20 @@ variable "environments" {
 
 variable "images" {
   type = map(object({
-    golden_image_name         = string
-    golden_image_vm_name      = string
-    local_admin_password      = string
-    local_admin_username      = string
     shared_image_name         = string
     shared_image_sku          = string
     shared_image_version_name = string
   }))
-  validation {
-    condition = alltrue([
-      for image in var.images : length(image.golden_image_vm_name) <= 15
-    ])
-    error_message = "Each golden_image_vm_name must be 15 characters or fewer."
-  }
 }
 
 variable "keyvault_name" {
   type        = string
   description = "Name or keyvault used to store secret of domain join password"
+}
+
+variable "location" {
+  type        = string
+  description = "Azure region that all the reources will be placed in"
 }
 
 variable "log_analytics_workspace_name" {
@@ -121,15 +128,25 @@ variable "managed_identity_name" {
   description = "Name of managed identity to create. This will be granted contributor roles on the sub"
   default     = "avd-automation"
 }
+
 variable "policy_target_locations" {
   type        = list(string)
   description = "A list of locations to target for the policy assignments for VMs"
 }
 
+variable "resource_group_name" {
+  type        = string
+  description = "Name of the resource group to be created"
+}
 variable "session_host_groups" {
   type        = list(string)
   description = "A list of groups that are used to provide apps to session hosts that are entra joined"
   default     = []
+}
+
+variable "shared_image_gallery_name" {
+  type        = string
+  description = "Name of the shared image gallery to be created"
 }
 
 variable "storage_account" {
@@ -153,6 +170,16 @@ variable "storage_account" {
       })
     }))
   })
+}
+
+variable "subnet_name" {
+  type        = string
+  description = "Name of the subnet to be created"
+}
+
+variable "subscription_id" {
+  type        = string
+  description = "Subscription Id the resources will be placed in"
 }
 
 variable "tenant_id" {

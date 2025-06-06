@@ -27,7 +27,7 @@ terraform {
 provider "azurerm" {
   #   use_oidc = true
   features {}
-  subscription_id                 = "074f4b99-ea66-4a73-a146-d342db9d1e92"
+  subscription_id                 = var.subscription_id
   resource_provider_registrations = "none"
 }
 provider "azapi" {
@@ -42,8 +42,8 @@ data "azurerm_client_config" "current" {
 }
 
 resource "azurerm_resource_group" "avd" {
-  name     = "rg-testing-avd-modules"
-  location = "northcentralus"
+  name     = var.resource_group_name
+  location = var.location
 }
 
 resource "azurerm_virtual_network" "test_vnet" {
@@ -55,9 +55,9 @@ resource "azurerm_virtual_network" "test_vnet" {
 }
 
 resource "azurerm_subnet" "test-avd-subnet" {
-  name                 = "test-avd-subnet"
+  name                 = var.subnet_name
   virtual_network_name = azurerm_virtual_network.test_vnet.name
-  address_prefixes     = [cidrsubnet("10.0.0.0/16", 8, 0)]
+  address_prefixes     = [cidrsubnet(var.vnet_ip_space, 8, 0)]
   resource_group_name  = azurerm_resource_group.avd.name
 }
 
@@ -86,8 +86,8 @@ module "automation" {
   source                      = "./modules/automation"
   location                    = azurerm_resource_group.avd.location
   resource_group_name         = azurerm_resource_group.avd.name
-  automation_account_name     = "AVD-Automation"
-  automation_account_sku_name = "Basic"
+  automation_account_name     = var.automation_account_name
+  automation_account_sku_name = var.automation_account_sku
   identity = [{
     identity_ids = [module.managed_identity.managed_identity_id]
   identity_type = "UserAssigned" }]
@@ -134,7 +134,7 @@ module "role_assignments" {
 module "shared_image_gallery" {
   source              = "./modules/image_gallery"
   location            = azurerm_resource_group.avd.location
-  name                = "NC_US_Shared_Gallery"
+  name                = var.shared_image_gallery_name
   resource_group_name = azurerm_resource_group.avd.name
 }
 

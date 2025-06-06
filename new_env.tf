@@ -7,7 +7,7 @@ resource "azuread_group" "avd_hosts" {
   types            = ["DynamicMembership"]
   dynamic_membership {
     enabled = true
-    rule    = "device.displayName -like ${each.value.groupFilterSubstring}"
+    rule    = "device.displayName -like \"*${each.value.groupFilterSubstring}*\""
   }
 }
 
