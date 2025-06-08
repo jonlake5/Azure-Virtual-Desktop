@@ -57,35 +57,30 @@ resource "azurerm_automation_webhook" "webhook" {
   depends_on = [azurerm_automation_runbook.runbook]
 }
 
-resource "azurerm_automation_module" "az_compute" {
-  name                    = "Az.Compute"
-  resource_group_name     = var.resource_group_name
-  automation_account_name = azurerm_automation_account.automation.name
-  module_link {
-    uri = "https://www.powershellgallery.com/api/v2/package/Az.Compute/10.0.0"
+locals {
+  az_modules = {
+    az_compute = {
+      uri  = "https://www.powershellgallery.com/api/v2/package/Az.Compute/10.0.0"
+      name = "Az.Compute"
+    }
+    az_accounts = {
+      uri  = "https://www.powershellgallery.com/api/v2/package/Az.Accounts/5.0.1"
+      name = "Az.Accounts"
+    }
+    az = {
+      uri  = "https://www.powershellgallery.com/api/v2/package/Az/14.0.0"
+      name = "Az"
+    }
   }
-
 }
-
-# This doesn't seem to work, so manually will need to import 10.0.0
-# resource "null_resource" "install_az_compute_ps72" {
-#   provisioner "local-exec" {
-#     command = <<EOT
-# az extension add --name automation
-
-# az automation module create \
-#   --automation-account-name "${azurerm_automation_account.automation.name}" \
-#   --resource-group "${var.resource_group_name}" \
-#   --name "Az.Compute" \
-#   --content-link "https://www.powershellgallery.com/api/v2/package/Az.Compute/10.0.0" \
-#   --runtime-version "7.2"
-# EOT
-#   }
-#   triggers = {
-#     always_run = timestamp()
-#   }
-#   depends_on = [azurerm_automation_account.automation, azurerm_automation_runbook.runbook]
-# }
+resource "azurerm_automation_powershell72_module" "module" {
+  for_each              = local.az_modules
+  name                  = each.value.name
+  automation_account_id = azurerm_automation_account.automation.id
+  module_link {
+    uri = each.value.uri
+  }
+}
 
 resource "azurerm_key_vault" "key_vault" {
   resource_group_name       = var.resource_group_name

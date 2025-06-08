@@ -11,6 +11,7 @@ $vmName = $inputData.vmName
 
 $null = Connect-AzAccount -Identity -AccountId $accountID
 
+write-output "Getting Registration Token (or creating if one doesn't exist)"
 $regToken = Get-AzWvdHostPoolRegistrationToken -ResourceGroupName $resourceGroupname -HostPoolName $hostPoolName
     
 if ($null -eq $regToken.Token) {
@@ -32,7 +33,7 @@ if ($null -eq $registrationToken) {
 $configUrl = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip"
 $configFunction = "Configuration.ps1\AddSessionHost"
 
-
+write-output "Adding host $vmName to host pool $hostPoolName"
 Set-AzVMExtension `
     -ResourceGroupName $resourceGroupName `
     -VMName $vmName `
