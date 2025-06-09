@@ -264,11 +264,20 @@ storage_account = {
 keyvault_name = "avd-kv-jlake" #must be globally unique
 # keyvault_secret_name = "domain-join-password"
 
+#This is used to define a maintenance definition in Azure Update for patching
+maintenance_definition = {
+  "nightly_patching" = {
+    maintenance_name            = "avd-nightly-patching"
+    maintenance_scope           = "InGuestPatch"
+    maintenance_duration        = "03:00"
+    maintenance_start_date_time = "2025-06-04 15:30"
+    # maintenance_end_date_time   = optional(string)
+    maintenance_recurrence = "1Day"
+    maintenance_time_zone  = "US Eastern Standard Time"
+    # patch_classifications_to_include = ["Critical","Security"] - This is default if not explicitly set
+    patch_classifications_to_include = ["Critical", "Security", "Updates"]
+  }
+}
 
 # This is used in some policies to define what region(s) should be targeted for the policies.
 policy_target_locations = ["northcentralus"]
-
-# This variable is only required if any session hosts are using Entra auth type. 
-# It will assign these groups VM User Login rights at the RG level. 
-# It is recommened to add each group here that is also used to assign rights to an applicaiton group that is associated with a host pool that uses Entra auth.
-session_host_groups = ["Duo AD Sync", "CORP-RDS-ACCESS"]

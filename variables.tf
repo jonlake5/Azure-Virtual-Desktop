@@ -143,11 +143,6 @@ variable "resource_group_name" {
   type        = string
   description = "Name of the resource group to be created"
 }
-variable "session_host_groups" {
-  type        = list(string)
-  description = "A list of groups that are used to provide apps to session hosts that are entra joined"
-  default     = []
-}
 
 variable "shared_image_gallery_name" {
   type        = string

@@ -135,14 +135,18 @@ module "policies" {
 
 }
 
+locals {
+  all_application_groups = [for k, v in local.flattened_application_groups :
+    v.application_group.application_group_assignnment_group_name
+  ]
+}
+
 module "role_assignments" {
   source              = "./modules/avd_role_assignments"
   resource_group_name = azurerm_resource_group.avd.name
   subscription_id     = data.azurerm_client_config.current.subscription_id
-  session_host_groups = var.session_host_groups
+  session_host_groups = toset(local.all_application_groups)
   depends_on          = [azurerm_resource_group.avd]
-
-
 }
 
 module "shared_image_gallery" {
