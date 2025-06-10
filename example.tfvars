@@ -1,10 +1,10 @@
 # Environment configuration. This region is where all of the resources will be placed. The tenant is the Entra tenant associated with the subscription.
 location            = "northcentralus"
 tenant_id = "6d7e2966-xxxx-xxxx-xxxx-d9ec3af61a7c"
-
-# These are the basic constructs needed. They should be self explanatory but each of these will create exactly (1) resource of type: Resource Group, vNet, and subnet
-resource_group_name = "rg-testing-avd-modules"
 subscription_id     = "074f4b99-xxxx-xxxx-xxxx-xxxxdb9d1e92"
+
+# These are the basic constructs needed. Each of these will create exactly (1) resource of type: Resource Group, vNet, and subnet
+resource_group_name = "rg-testing-avd-modules"
 
 vnet_ip_space       = "10.0.0.0/16"
 vnet_name           = "test-avd-vnet"
@@ -52,11 +52,11 @@ automation_runbooks = {
   }
 }
 
-#This block will create n number of dynamic Entra groups as defined in the block.
+#This block will create n number of dynamic Entra groups as defined in the block. These can also be created ahead of time for 
 dynamic_host_groups = {
   "group1" = {
-    groupName = "EntraGroupName"
-    groupFilterSubstring = "my-device-substring"
+    groupName = "AVD-HOSTS"
+    groupFilterSubstring = "avd-"
   }
 }
 
@@ -128,12 +128,12 @@ environments = {
             application_group_name                   = "SAP-Apps"
             application_group_type                   = "RemoteApp"
             applications = {
-              "chrome" = {
+              "SAP" = {
                 friendly_name = "SAP"
                 name          = "sap"
                 path          = "C:\\Program Files\\SAP\\sap.exe"
               }
-              "notepad" = {
+              "iWidget" = {
                 friendly_name = "iWidget"
                 name          = "iwidget"
                 path          = "C:\\Program Files (x86)\\iWidget\\iwidget.exe"
@@ -176,20 +176,20 @@ environments = {
           off_peak_start_time                  = "22:00"
           off_peak_load_balancing_algorithm    = "DepthFirst"
         }
-        # application_groups = {
-        #   app_grp_1 = {
-        #     application_group_assignnment_group_name = "Duo AD Sync"
-        #     application_group_name                   = "Server-Apps"
-        #     application_group_type                   = "RemoteApp"
-        #     applications = {
-        #       "chrome" = {
-        #         friendly_name = "Edge"
-        #         name          = "edge"
-        #         path          = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
-        #       }
-        #     }
-        #   }
-        # }
+        application_groups = {
+          # app_grp_1 = {
+          #   application_group_assignnment_group_name = "Duo AD Sync"
+          #   application_group_name                   = "Server-Apps"
+          #   application_group_type                   = "RemoteApp"
+          #   applications = {
+          #     "chrome" = {
+          #       friendly_name = "Edge"
+          #       name          = "edge"
+          #       path          = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+          #     }
+          #   }
+          # }
+        }
       }
     }
   }
@@ -214,7 +214,7 @@ maintenance_definition = {
     maintenance_name            = "avd-nightly-patching"
     maintenance_scope           = "InGuestPatch"
     maintenance_duration        = "03:00"
-    maintenance_start_date_time = "2025-06-04 15:30"
+    maintenance_start_date_time = "2025-06-04 22:30"
     # maintenance_end_date_time   = optional(string)
     maintenance_recurrence = "1Day"
     maintenance_time_zone  = "US Eastern Standard Time"
@@ -223,7 +223,7 @@ maintenance_definition = {
   }
 }
 
-#This block will create an Premium Azure File storage account.
+# This block will create a Premium Azure File storage account.
 # If directory config is set to either directory_type = AD or directory_type = AADKERB it will
 # setup the configuration for either AD or Entra with Kerberos. Comments are placed on the lines
 # stating which lines are required for each type of configuration. AADDS (managed Azure AD) has not 
@@ -263,21 +263,6 @@ storage_account = {
 # Keyvault_secret_name is not required and default value is domain-join-password
 keyvault_name = "avd-kv-jlake" #must be globally unique
 # keyvault_secret_name = "domain-join-password"
-
-#This is used to define a maintenance definition in Azure Update for patching
-maintenance_definition = {
-  "nightly_patching" = {
-    maintenance_name            = "avd-nightly-patching"
-    maintenance_scope           = "InGuestPatch"
-    maintenance_duration        = "03:00"
-    maintenance_start_date_time = "2025-06-04 15:30"
-    # maintenance_end_date_time   = optional(string)
-    maintenance_recurrence = "1Day"
-    maintenance_time_zone  = "US Eastern Standard Time"
-    # patch_classifications_to_include = ["Critical","Security"] - This is default if not explicitly set
-    patch_classifications_to_include = ["Critical", "Security", "Updates"]
-  }
-}
 
 # This is used in some policies to define what region(s) should be targeted for the policies.
 policy_target_locations = ["northcentralus"]
