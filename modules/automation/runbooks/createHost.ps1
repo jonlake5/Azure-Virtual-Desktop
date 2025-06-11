@@ -9,7 +9,7 @@ $galleryImage = $inputData.galleryImage
 $hostPoolName = $inputData.hostPoolName
 $vNetName = $inputData.vNetName
 $subnetName = $inputData.subnetName
-$accountID = $inputData.accountID
+# $accountID = $inputData.accountID
 $hostPrefix = $inputData.hostPrefix
 $vmSize = $inputData.vmSize
 $location = $inputData.location
@@ -20,9 +20,10 @@ $user = $inputData.user
 $vaultName = $inputData.vaultName
 $secretName = $inputData.secretName
 $maintenanceConfigName = $inputData.maintenanceConfigName
-$joinToDomain = $inputData.joinToDomain
-$joinToEntra = $inputData.joinToEntra
+$joinType = $inputData.joinType
+$vmName = $inputData.vmName
 
+$accountID = Get-AutomationVariable -Name "accountId"
 $null = Connect-AzAccount -Identity -AccountId $accountID
 
 
@@ -30,32 +31,40 @@ $galleryName, $imageDefinition, $imageVersion = $galleryImage.split('/')
 
 
 ## Get the host pool so we can get the VMs and determine next name
-import-module az.compute -verbose
-$sessionHosts = Get-AzWvdSessionHost -HostPoolName $hostPoolName -ResourceGroupName $resourceGroupName
-if ($null -eq $sessionHosts -and $null -eq $hostPrefix) {
-    throw "The value for hostPrefix was not set and there are no session hosts to model the hostname after. Exiting"
-}
-if ($null -ne $sessionHosts -and $null -ne $hostPrefix) {
-    write-warning "Hostprefix was set but there are also session hosts in the host pool. The provided value from hostprefix will be overriden by determining the host prefix based off of existing session host names"
-}
 
-$hostNumbers = @()
-
-if ($sessionHosts) {
-    foreach ($sessionHost in $sessionHosts.name) {
-        $hostNumber = $sessionHost.split(".")[0].split('-')[-1]
-        $hostNumbers += [int32]$hostNumber
-        $hostName = $sessionHost.split('/')[-1].split(".")[0]
+#determine the VM Name
+if ($vmName -and ($vmName -notmatch '-\d+$')) {
+    $vmName = "$vmName-1"
+}
+if (-not $vmName) {
+    $sessionHosts = Get-AzWvdSessionHost -HostPoolName $hostPoolName -ResourceGroupName $resourceGroupName
+    if ($null -eq $sessionHosts -and $null -eq $hostPrefix) {
+        throw "The value for hostPrefix was not set and there are no session hosts to model the hostname after. Exiting"
     }
-    $nextHostNumber = ($hostNumbers | Sort-Object )[-1] + 1
-    write-output "Next host number is $nextHostNumber"
-    write-output "Existing hostname of host in pool is $hostName"
-    $hostPrefix = [Regex]::Match($hostName, "(.+)-\d+$").Groups[1].Value
+    if ($null -ne $sessionHosts -and $null -ne $hostPrefix) {
+        write-warning "Hostprefix was set but there are also session hosts in the host pool. The provided value from hostprefix will be overriden by determining the host prefix based off of existing session host names"
+    }
+
+    $hostNumbers = @()
+
+    if ($sessionHosts) {
+        foreach ($sessionHost in $sessionHosts.name) {
+            $hostNumber = $sessionHost.split(".")[0].split('-')[-1]
+            $hostNumbers += [int32]$hostNumber
+            $hostName = $sessionHost.split('/')[-1].split(".")[0]
+        }
+        $nextHostNumber = ($hostNumbers | Sort-Object )[-1] + 1
+        write-output "Next host number is $nextHostNumber"
+        write-output "Existing hostname of host in pool is $hostName"
+        $hostPrefix = [Regex]::Match($hostName, "(.+)-\d+$").Groups[1].Value
+    }
+    else {
+        $nextHostNumber = 1
+    }
+    $vmName = @($hostPrefix, [string]$nextHostNumber) | join-string -Separator "-" 
 }
-else {
-    $nextHostNumber = 1
-}
-$vmName = @($hostPrefix, [string]$nextHostNumber) | join-string -Separator "-"
+
+
 if ($vmName.Length -gt 15) {
     throw "The generated VM Name ($vmName) is longer than 15 characters and will not be created."
 }
@@ -104,7 +113,7 @@ if ($null -eq $vm) {
 
 write-output "VM is $($vmName)"
 write-output "Local Username is $($username)"
-if ($joinToEntra) {
+if ($joinType -eq "Entra") {
     write-output "Joining to Entra"
     $script = @'
 dsregcmd.exe /join
@@ -147,7 +156,7 @@ dsregcmd.exe /join
         Write-Warning "The VM was unable to be entra joined"
     }
 }
-if ($joinToDomain) {   
+if ($joinType -eq "AD") {   
     write-output "Joining the AD domain $domainName in OU $outPath"
     $password = (Get-AzKeyVaultSecret -vaultName $vaultName -Name $secretName).secretValue | ConvertFrom-SecureString -AsPlainText
     [securestring]$secStringPassword = ConvertTo-SecureString $password -AsPlainText -Force

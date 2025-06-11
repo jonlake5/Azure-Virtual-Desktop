@@ -7,9 +7,8 @@ $resourceGroupName = $inputData.resourceGroupName
 $maintenanceConfigName = $inputData.maintenanceConfigName
 $location = $inputData.location
 $vmName = $inputData.vmName
-$maintenanceConfigName = $inputData.maintenanceConfigName
-$accountId = $inputData.accountId
-
+# $accountId = $inputData.accountId
+$accountID = Get-AutomationVariable -Name "accountId"
 $null = Connect-AzAccount -Identity -AccountId $accountId
 
 $configAssignmentName = "$vmName-$maintenanceConfigName"

@@ -5,7 +5,7 @@ param (
 
 $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
-$accountID = $inputData.accountID
+# $accountID = $inputData.accountID
 $vmName = $inputData.vmName
 $domainName = $inputData.domainName
 $ouPath = $inputData.ouPath
@@ -13,6 +13,7 @@ $user = $inputData.user
 $vaultName = $inputData.vaultName
 $secretName = $inputData.secretName
 
+$accountID = Get-AutomationVariable -Name "accountId"
 $null = Connect-AzAccount -Identity -AccountId $accountID
 
 $password = (Get-AzKeyVaultSecret -vaultName $vaultName -Name $secretName).secretValue | ConvertFrom-SecureString -AsPlainText

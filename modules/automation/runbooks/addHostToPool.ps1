@@ -6,9 +6,9 @@ param (
 $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
 $hostPoolName = $inputData.hostPoolName
-$accountID = $inputData.accountID
+# $accountID = $inputData.accountID
 $vmName = $inputData.vmName
-
+$accountID = Get-AutomationVariable -Name "accountId"
 $null = Connect-AzAccount -Identity -AccountId $accountID
 
 write-output "Getting Registration Token (or creating if one doesn't exist)"

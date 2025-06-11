@@ -4,14 +4,12 @@ param (
 
 Write-Output "Logging in as user assigned managed Identity"
 
-write-output "Input data received"
-write-output $inputData
-
 $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
 $scalingPlanName = $inputData.scalingPlanName
 $hostPoolName = $inputData.hostPoolName
-$accountID = $inputData.accountID
+# $accountID = $inputData.accountID
+$accountID = Get-AutomationVariable -Name "accountId"
 
 $null = Connect-AzAccount -Identity -AccountId $accountID
 

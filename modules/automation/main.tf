@@ -3,9 +3,6 @@ resource "azurerm_automation_account" "automation" {
   location            = var.location
   resource_group_name = var.resource_group_name
   sku_name            = var.automation_account_sku_name
-
-
-
   dynamic "identity" {
     for_each = var.identity
     content {
@@ -14,6 +11,13 @@ resource "azurerm_automation_account" "automation" {
     }
   }
 
+}
+
+resource "azurerm_automation_variable_string" "account_id" {
+  name                    = "accountId"
+  resource_group_name     = var.resource_group_name
+  automation_account_name = azurerm_automation_account.automation.name
+  value                   = var.managed_identity_principal_id
 }
 
 resource "azurerm_automation_variable_string" "string" {
