@@ -6,7 +6,6 @@ $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
 $subscriptionId = $inputData.subscriptionId
 $locationFilter = $inputData.locationFilter
-# $accountId = $inputData.accountId
 $accountID = Get-AutomationVariable -Name "accountId"
 
 # Connect to Azure using managed identity

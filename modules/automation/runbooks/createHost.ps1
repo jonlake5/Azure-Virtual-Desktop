@@ -9,7 +9,6 @@ $galleryImage = $inputData.galleryImage
 $hostPoolName = $inputData.hostPoolName
 $vNetName = $inputData.vNetName
 $subnetName = $inputData.subnetName
-# $accountID = $inputData.accountID
 $hostPrefix = $inputData.hostPrefix
 $vmSize = $inputData.vmSize
 $location = $inputData.location

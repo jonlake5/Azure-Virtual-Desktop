@@ -1,15 +1,15 @@
 # Environment configuration. This region is where all of the resources will be placed. The tenant is the Entra tenant associated with the subscription.
-location            = "northcentralus"
-tenant_id = "6d7e2966-xxxx-xxxx-xxxx-d9ec3af61a7c"
-subscription_id     = "074f4b99-xxxx-xxxx-xxxx-xxxxdb9d1e92"
+location        = "northcentralus"
+tenant_id       = "6d7e2966-xxxx-xxxx-xxxx-d9ec3af61a7c"
+subscription_id = "074f4b99-xxxx-xxxx-xxxx-xxxxdb9d1e92"
 
 # These are the basic constructs needed. Each of these will create exactly (1) resource of type: Resource Group, vNet, and subnet
 resource_group_name = "rg-testing-avd-modules"
 
-vnet_ip_space       = "10.0.0.0/16"
-vnet_name           = "test-avd-vnet"
-vnet_dns_servers    = ["10.0.0.17", "8.8.8.8"]
-subnet_name         = "test-avd-subnet"
+vnet_ip_space    = "10.0.0.0/16"
+vnet_name        = "test-avd-vnet"
+vnet_dns_servers = ["10.0.0.17", "8.8.8.8"]
+subnet_name      = "test-avd-subnet"
 
 
 # This block defines all of the automation runbooks available. If enabled is set to false, the runbook is not created (or is removed if it was previously created)
@@ -55,7 +55,7 @@ automation_runbooks = {
 #This block will create n number of dynamic Entra groups as defined in the block. These can also be created ahead of time for 
 dynamic_host_groups = {
   "group1" = {
-    groupName = "AVD-HOSTS"
+    groupName            = "AVD-HOSTS"
     groupFilterSubstring = "avd-"
   }
 }
@@ -199,12 +199,12 @@ environments = {
 shared_image_gallery_name = "NC_US_Shared_Gallery"
 images = {
   "image_1" = {
-    shared_image_name         = "image-app-1"
-    shared_image_sku          = "app-1-sku"
+    shared_image_name = "image-app-1"
+    shared_image_sku  = "app-1-sku"
   }
   "image_2" = {
-    shared_image_name         = "image-app-2"
-    shared_image_sku          = "app-2-sku"
+    shared_image_name = "image-app-2"
+    shared_image_sku  = "app-2-sku"
   }
 }
 
@@ -247,11 +247,11 @@ storage_account = {
     "config1" = {
       directory_type = "AD"
       active_directory_config = {
-        domain_guid         = "31a09564-cd4a-4520-98fa-446a2af23b4b" #AD and AADKERB
-        domain_name         = "jlake.avd" #AD and AADKERB
-        domain_sid          = "S-1-5-21-149512832-3414834421-4071874907" #AD only
-        forest_name         = "jlake.avd" #AD only
-        netbios_domain_name = "jlake" #AD only
+        domain_guid         = "31a09564-cd4a-4520-98fa-446a2af23b4b"          #AD and AADKERB
+        domain_name         = "jlake.avd"                                     #AD and AADKERB
+        domain_sid          = "S-1-5-21-149512832-3414834421-4071874907"      #AD only
+        forest_name         = "jlake.avd"                                     #AD only
+        netbios_domain_name = "jlake"                                         #AD only
         storage_sid         = "S-1-5-21-149512832-3414834421-4071874907-2604" #AD only
       }
     }
@@ -261,8 +261,13 @@ storage_account = {
 #This will create one keyvault to store the password the automation account uses to join a VM to the domain.
 # Keyvault names must be globally unique within Azure. 
 # Keyvault_secret_name is not required and default value is domain-join-password
-keyvault_name = "avd-kv-jlake" #must be globally unique
-# keyvault_secret_name = "domain-join-password"
+
+keyvault = {
+  domain_join = {
+    name = "avd-kv-jlake" #must be globally unique
+    # keyvault_secret_name = "domain-join-password" # This is the default value
+  }
+}
 
 # This is used in some policies to define what region(s) should be targeted for the policies.
 policy_target_locations = ["northcentralus"]

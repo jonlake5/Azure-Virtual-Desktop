@@ -93,15 +93,14 @@ variable "images" {
   }))
 }
 
-variable "keyvault_name" {
-  type        = string
-  description = "Name or keyvault used to store secret of domain join password"
-}
 
-variable "keyvault_secret_name" {
-  type        = string
-  default     = "domain-join-password"
-  description = "Name of the keyvault secret used to join the domain. Default is avd-keyvault"
+variable "keyvault" {
+  type = map(object({
+    name        = string
+    secret_name = optional(string, "domain-join-password")
+  }))
+  description = "Map of object representing the keyvault to be created"
+  default     = {}
 }
 
 variable "location" {

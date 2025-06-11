@@ -97,8 +97,7 @@ module "automation" {
   identity_type = "UserAssigned" }]
   runbooks                      = var.automation_runbooks
   tenant_id                     = var.tenant_id
-  keyvault_name                 = var.keyvault_name
-  keyvault_secret_name          = var.keyvault_secret_name
+  keyvault                      = var.keyvault
   domain_join_password          = var.domain_join_password
   managed_identity_principal_id = module.managed_identity.managed_identity_principal_id
   depends_on                    = [azurerm_resource_group.avd]
@@ -197,18 +196,9 @@ output "managed_identity_account_id" {
   value = module.managed_identity.managed_identity_principal_id
 }
 
-output "keyvault_name" {
-  value = module.automation.keyvault_name
+output "keyvault_and_secret" {
+  value = module.automation.keyvault_name_and_secret
 }
-
-output "keyvault_secret" {
-  value = module.automation.keyvault_secret
-}
-
-# output "managed_identity_object_id" {
-#   value = module.managed_identity.managed_identity_id
-# }
-
 
 output "maintenance_config_name" {
   value = module.updates.maintenance_config_name

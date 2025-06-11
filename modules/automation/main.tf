@@ -1,3 +1,5 @@
+data "azurerm_client_config" "current" {}
+
 resource "azurerm_automation_account" "automation" {
   name                = var.automation_account_name
   location            = var.location
@@ -10,7 +12,6 @@ resource "azurerm_automation_account" "automation" {
       identity_ids = identity.value.identity_ids
     }
   }
-
 }
 
 resource "azurerm_automation_variable_string" "account_id" {
@@ -26,11 +27,9 @@ resource "azurerm_automation_variable_string" "string" {
   resource_group_name     = var.resource_group_name
   automation_account_name = azurerm_automation_account.automation.name
   value                   = var.automation_variables[count.index].value
-
 }
 
 resource "azurerm_automation_runbook" "runbook" {
-  # for_each = var.runbooks
   for_each                = { for k, v in var.runbooks : k => v if v.enabled }
   resource_group_name     = var.resource_group_name
   location                = var.location
@@ -47,14 +46,12 @@ resource "azurerm_automation_runbook" "runbook" {
 }
 
 resource "azurerm_automation_webhook" "webhook" {
-  for_each = { for k, v in var.runbooks : k => v if v.webhook && v.enabled }
-  # for_each                = var.runbooks
+  for_each                = { for k, v in var.runbooks : k => v if v.webhook && v.enabled }
   resource_group_name     = var.resource_group_name
   automation_account_name = azurerm_automation_account.automation.name
   runbook_name            = split(".ps1", each.value.file_name)[0]
-  # runbook_name = azurerm_automation_runbook.runbook.name
-  name        = "${split(".ps1", each.value.file_name)[0]}-webhook"
-  expiry_time = timeadd(timestamp(), "999h")
+  name                    = "${split(".ps1", each.value.file_name)[0]}-webhook"
+  expiry_time             = timeadd(timestamp(), "999h")
   lifecycle {
     ignore_changes = [expiry_time]
   }
@@ -87,44 +84,40 @@ resource "azurerm_automation_powershell72_module" "module" {
 }
 
 resource "azurerm_key_vault" "key_vault" {
+  for_each                  = var.keyvault
   resource_group_name       = var.resource_group_name
   location                  = var.location
-  name                      = var.keyvault_name
+  name                      = each.value.name
   sku_name                  = "standard"
   tenant_id                 = var.tenant_id
   enable_rbac_authorization = true
 }
 
 resource "azurerm_key_vault_secret" "secret" {
-  name         = var.keyvault_secret_name
-  key_vault_id = azurerm_key_vault.key_vault.id
+  for_each     = var.keyvault
+  name         = each.value.secret_name
+  key_vault_id = azurerm_key_vault.key_vault[each.key].id
   value        = var.domain_join_password
   depends_on   = [azurerm_role_assignment.tf_read_write_key_vault]
 
 }
 
-data "azurerm_client_config" "current" {}
-
-
 resource "azurerm_role_assignment" "tf_read_write_key_vault" {
-  scope                = azurerm_key_vault.key_vault.id
+  for_each             = var.keyvault
+  scope                = azurerm_key_vault.key_vault[each.key].id
   role_definition_name = "Key Vault Secrets Officer"
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
 resource "azurerm_role_assignment" "managed_identity_read_write_key_vault" {
-  scope                = azurerm_key_vault.key_vault.id
+  for_each             = var.keyvault
+  scope                = azurerm_key_vault.key_vault[each.key].id
   role_definition_name = "Key Vault Secrets User"
   principal_id         = var.managed_identity_principal_id
 }
 
-
-output "keyvault_name" {
-  value = azurerm_key_vault.key_vault.name
-}
-
-output "keyvault_secret" {
-  value = azurerm_key_vault_secret.secret.name
+output "keyvault_name_and_secret" {
+  value = [for k, v in var.keyvault : join(" : ", [azurerm_key_vault.key_vault[k].name, azurerm_key_vault_secret.secret[k].name])]
 }
 
 output "webhook_url" {

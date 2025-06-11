@@ -26,16 +26,14 @@ variable "identity" {
   }))
 }
 
-variable "keyvault_name" {
-  type        = string
-  description = "Name of keyvault used to store domain join password"
+variable "keyvault" {
+  type = map(object({
+    name        = string
+    secret_name = optional(string, "domain-join-password")
+  }))
+  description = "Map of object representing the keyvault to be created"
 }
 
-variable "keyvault_secret_name" {
-  type        = string
-  description = "Name of Key Vault secret that holds the domain join password"
-
-}
 variable "location" {
   type        = string
   description = "Azure region"

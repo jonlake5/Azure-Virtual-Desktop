@@ -5,7 +5,6 @@ param (
 
 $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
-# $accountID = $inputData.accountID
 $vmName = $inputData.vmName
 $domainName = $inputData.domainName
 $ouPath = $inputData.ouPath
