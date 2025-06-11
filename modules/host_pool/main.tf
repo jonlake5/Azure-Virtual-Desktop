@@ -9,6 +9,7 @@ resource "azurerm_virtual_desktop_host_pool" "avd" {
   type                     = var.host_pool_type
   maximum_sessions_allowed = var.maximum_sessions_allowed
   custom_rdp_properties    = var.custom_rdp_properties
+  preferred_app_group_type = var.preferred_app_group_type
   scheduled_agent_updates {
     enabled                   = var.scheduled_agent_updates
     use_session_host_timezone = false

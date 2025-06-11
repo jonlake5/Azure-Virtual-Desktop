@@ -6,6 +6,8 @@ variable "applications" {
     path                         = string
     command_line_argument_policy = optional(string, "DoNotAllow")
     command_line_arguments       = optional(string, null)
+    icon_path                    = optional(string, null)
+    icon_index                   = optional(string, null)
   }))
   default = {}
 }
@@ -13,6 +15,13 @@ variable "applications" {
 variable "application_group_assignnment_group_name" {
   type        = string
   description = "Name of Entra Group that will be provided access to this application group"
+}
+
+variable "application_group_friendly_name" {
+  type        = string
+  description = "Friendly name of the application group"
+  nullable    = true
+  default     = null
 }
 
 variable "application_group_name" {

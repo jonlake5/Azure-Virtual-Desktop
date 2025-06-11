@@ -51,6 +51,12 @@ variable "maximum_sessions_allowed" {
   default = 1
 }
 
+variable "preferred_app_group_type" {
+  type        = string
+  description = "Option to specify the preferred Application Group type for the Virtual Desktop Host Pool"
+  default     = "Desktop"
+}
+
 variable "resource_group_name" {
   type        = string
   description = "Name of resource group for the shared gallery"
