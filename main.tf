@@ -50,17 +50,17 @@ resource "azurerm_resource_group" "avd" {
   location = var.location
 }
 
-resource "azurerm_virtual_network" "avd_vnet" {
+resource "azurerm_virtual_network" "avd" {
   location            = azurerm_resource_group.avd.location
   name                = var.vnet_name
   resource_group_name = azurerm_resource_group.avd.name
   address_space       = [cidrsubnet(var.vnet_ip_space, 0, 0)]
-  # dns_servers         = var.vnet_dns_servers
+  dns_servers         = var.vnet_dns_servers
 }
 
-resource "azurerm_subnet" "test-avd-subnet" {
+resource "azurerm_subnet" "avd" {
   name                 = var.subnet_name
-  virtual_network_name = azurerm_virtual_network.avd_vnet.name
+  virtual_network_name = azurerm_virtual_network.avd.name
   address_prefixes     = [cidrsubnet(var.vnet_ip_space, 8, 0)]
   resource_group_name  = azurerm_resource_group.avd.name
 }
@@ -69,7 +69,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "file" {
   name                  = "link_avd_vnet"
   resource_group_name   = azurerm_resource_group.avd.name
   private_dns_zone_name = azurerm_private_dns_zone.file.name
-  virtual_network_id    = azurerm_virtual_network.avd_vnet.id
+  virtual_network_id    = azurerm_virtual_network.avd.id
 }
 
 resource "azurerm_private_dns_zone" "file" {
