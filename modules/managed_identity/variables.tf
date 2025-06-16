@@ -1,14 +1,13 @@
 
 variable "location" {
   type        = string
-  description = "Location of the shared image gallery"
+  description = "Location of the managed identity"
 }
 
 variable "managed_identity_name" {
   type        = string
   description = "Name of the Managed Identity"
 }
-
 
 variable "resource_group_name" {
   type        = string
