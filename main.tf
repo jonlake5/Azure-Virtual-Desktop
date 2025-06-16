@@ -141,11 +141,11 @@ locals {
 }
 
 module "role_assignments" {
-  source              = "./modules/avd_role_assignments"
-  resource_group_name = azurerm_resource_group.avd.name
-  subscription_id     = data.azurerm_client_config.current.subscription_id
-  session_host_groups = toset(local.all_application_groups)
-  depends_on          = [azurerm_resource_group.avd]
+  source                              = "./modules/avd_role_assignments"
+  resource_group_name                 = azurerm_resource_group.avd.name
+  subscription_id                     = data.azurerm_client_config.current.subscription_id
+  application_group_assignment_groups = toset(local.all_application_groups)
+  depends_on                          = [azurerm_resource_group.avd]
 }
 
 module "shared_image_gallery" {

@@ -3,9 +3,9 @@ variable "resource_group_name" {
   description = "Name of the resource group"
 }
 
-variable "session_host_groups" {
+variable "application_group_assignment_groups" {
   type        = list(string)
-  description = "A list of groups that are used to provide apps to session hosts that are entra joined"
+  description = "A list of groups that provide assignments of groups to application groups"
 }
 
 
