@@ -26,14 +26,14 @@ variable "shared_image_name" {
 
 variable "shared_image_offer" {
   type        = string
-  default     = "windows-11"
-  description = "Offer of the imagesource image the golden image will be created from"
+  default     = "qindows-11"
+  description = "Offer of the image definition that will be created in the shared image gallery"
   nullable    = false
 }
 
 variable "shared_image_publisher" {
   type        = string
-  default     = "MyOrg"
+  default     = "microsoftwindowsdesktop"
   description = "Publisher of the source image the golden image will be created from"
   nullable    = false
 }
@@ -41,4 +41,6 @@ variable "shared_image_publisher" {
 variable "shared_image_sku" {
   type        = string
   description = "SKU of the source image the golden image will be created from"
+  default     = "win11-24h2-avd"
+  nullable    = false
 }
