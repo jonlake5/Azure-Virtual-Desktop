@@ -44,16 +44,21 @@ variable "environments" {
       workspace_friendly_name = string
     })
     host_pools = map(object({
-      auth_type                = string
-      custom_rdp_properties    = optional(string, "enablecredsspsupport:i:1;videoplaybackmode:i:1;audiomode:i:0;devicestoredirect:s:*;drivestoredirect:s:*;redirectclipboard:i:1;redirectcomports:i:1;redirectprinters:i:1;redirectsmartcards:i:1;redirectwebauthn:i:1;usbdevicestoredirect:s:*;use multimon:i:1;")
-      load_balancer_type       = string
-      host_pool_friendly_name  = string
-      host_pool_name           = string
-      host_pool_type           = string
-      preferred_app_group_type = optional(string, "Desktop")
-      scaling_plan_enabled     = bool
-      scaling_plan_name        = optional(string)
-      scaling_plan_time_zone   = optional(string)
+      auth_type                           = string
+      custom_rdp_properties               = optional(string, "enablecredsspsupport:i:1;videoplaybackmode:i:1;audiomode:i:0;devicestoredirect:s:*;drivestoredirect:s:*;redirectclipboard:i:1;redirectcomports:i:1;redirectprinters:i:1;redirectsmartcards:i:1;redirectwebauthn:i:1;usbdevicestoredirect:s:*;use multimon:i:1;")
+      load_balancer_type                  = string
+      host_pool_friendly_name             = string
+      host_pool_name                      = string
+      host_pool_type                      = string
+      maximum_sessions_allowed            = optional(number, 999999)
+      personal_desktop_assignment_type    = optional(string, null)
+      preferred_app_group_type            = optional(string, "Desktop")
+      scaling_plan_enabled                = bool
+      scaling_plan_name                   = optional(string)
+      scaling_plan_time_zone              = optional(string)
+      scheduled_agent_updates             = optional(bool, false)
+      scheduled_agent_updates_hour_of_day = optional(number, 0)
+      scheduled_agent_updates_day_of_week = optional(string, "Sunday")
       scaling_plan_schedule = optional(object({
         name                                 = string
         days_of_week                         = list(string)
@@ -74,6 +79,7 @@ variable "environments" {
         off_peak_start_time                  = string
         off_peak_load_balancing_algorithm    = string
       }))
+      start_vm_on_connect = optional(bool, false)
       application_groups = optional(map(object({
         application_group_assignnment_group_name = string
         application_group_friendly_name          = optional(string, null)

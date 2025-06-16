@@ -1,15 +1,16 @@
 resource "azurerm_virtual_desktop_host_pool" "avd" {
-  location                 = var.location
-  resource_group_name      = var.resource_group_name
-  name                     = var.host_pool_name
-  friendly_name            = var.host_pool_friendly_name
-  validate_environment     = var.validate_environment
-  start_vm_on_connect      = var.start_vm_on_connect
-  load_balancer_type       = var.load_balancer_type
-  type                     = var.host_pool_type
-  maximum_sessions_allowed = var.maximum_sessions_allowed
-  custom_rdp_properties    = var.custom_rdp_properties
-  preferred_app_group_type = var.preferred_app_group_type
+  location                         = var.location
+  resource_group_name              = var.resource_group_name
+  name                             = var.host_pool_name
+  friendly_name                    = var.host_pool_friendly_name
+  validate_environment             = var.validate_environment
+  start_vm_on_connect              = var.start_vm_on_connect
+  load_balancer_type               = var.load_balancer_type
+  type                             = var.host_pool_type
+  maximum_sessions_allowed         = var.maximum_sessions_allowed
+  custom_rdp_properties            = var.custom_rdp_properties
+  preferred_app_group_type         = var.preferred_app_group_type
+  personal_desktop_assignment_type = var.host_pool_type == "Pooled" ? null : coalesce(var.personal_desktop_assignment_type, "Automatic")
   scheduled_agent_updates {
     enabled                   = var.scheduled_agent_updates
     use_session_host_timezone = false

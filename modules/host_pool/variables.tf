@@ -51,6 +51,13 @@ variable "maximum_sessions_allowed" {
   default = 1
 }
 
+variable "personal_desktop_assignment_type" {
+  type        = string
+  description = "Automatic assignment – The service will select an available host and assign it to an user. Possible values are Automatic and Direct. Direct Assignment – Admin selects a specific host to assign to an user. Changing this forces a new resource to be created."
+  default     = null
+  nullable    = true
+}
+
 variable "preferred_app_group_type" {
   type        = string
   description = "Option to specify the preferred Application Group type for the Virtual Desktop Host Pool"
@@ -60,16 +67,6 @@ variable "preferred_app_group_type" {
 variable "resource_group_name" {
   type        = string
   description = "Name of resource group for the shared gallery"
-}
-
-variable "registration_key_valid_hours" {
-  type        = number
-  description = "Number of hours the registration key for the host pool should be valid for"
-  default     = 2
-  validation {
-    condition     = var.registration_key_valid_hours > 1 && var.registration_key_valid_hours <= 720
-    error_message = "Value must be between 2 and 720"
-  }
 }
 
 variable "scaling_plan_enabled" {
