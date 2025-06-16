@@ -101,8 +101,10 @@ variable "environments" {
 
 variable "images" {
   type = map(object({
-    shared_image_name = string
-    shared_image_sku  = string
+    shared_image_name      = string
+    shared_image_sku       = string
+    shared_image_offer     = optional(string, null)
+    shared_image_publisher = optional(string, null)
   }))
 }
 

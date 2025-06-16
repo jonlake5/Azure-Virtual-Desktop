@@ -164,6 +164,8 @@ module "shared_image" {
   shared_image_gallery_name = module.shared_image_gallery.name
   shared_image_name         = each.value.shared_image_name
   shared_image_sku          = each.value.shared_image_sku
+  shared_image_offer        = each.value.shared_image_offer
+  shared_image_publisher    = each.value.shared_image_publisher
   depends_on                = [module.shared_image_gallery, azurerm_resource_group.avd]
 }
 

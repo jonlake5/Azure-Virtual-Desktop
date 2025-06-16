@@ -27,13 +27,15 @@ variable "shared_image_name" {
 variable "shared_image_offer" {
   type        = string
   default     = "windows-11"
-  description = "Offer of the source image the golden image will be created from"
+  description = "Offer of the imagesource image the golden image will be created from"
+  nullable    = false
 }
 
 variable "shared_image_publisher" {
   type        = string
   default     = "MyOrg"
   description = "Publisher of the source image the golden image will be created from"
+  nullable    = false
 }
 
 variable "shared_image_sku" {
