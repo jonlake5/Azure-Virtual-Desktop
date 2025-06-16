@@ -25,7 +25,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_location"></a> [location](#input\_location) | Location of the shared image gallery | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Location of the resource group policy assignment | `string` | n/a | yes |
 | <a name="input_managed_identity_id"></a> [managed\_identity\_id](#input\_managed\_identity\_id) | Id of the managed identity used for policy assignments | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of the resource group to assign the policy | `string` | n/a | yes |
 

@@ -10,7 +10,7 @@ variable "law_name" {
 
 variable "location" {
   type        = string
-  description = "Location of the shared image gallery"
+  description = "Location of the log analytics workspace"
 }
 
 variable "managed_identity_id" {
@@ -26,7 +26,7 @@ variable "policy_assignment_resource_group_id" {
 
 variable "resource_group_name" {
   type        = string
-  description = "Name of resource group for the shared gallery"
+  description = "Name of resource group for the log analytics workspace"
 }
 
 variable "subscription_id" {

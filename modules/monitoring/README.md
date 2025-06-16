@@ -28,10 +28,10 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_ama_install_policy_assignment_name"></a> [ama\_install\_policy\_assignment\_name](#input\_ama\_install\_policy\_assignment\_name) | n/a | `string` | `"Azure Monitoring Agent Policy"` | no |
 | <a name="input_law_name"></a> [law\_name](#input\_law\_name) | Name of log analytics workspace | `string` | n/a | yes |
-| <a name="input_location"></a> [location](#input\_location) | Location of the shared image gallery | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Location of the log analytics workspace | `string` | n/a | yes |
 | <a name="input_managed_identity_id"></a> [managed\_identity\_id](#input\_managed\_identity\_id) | Managed Identity Id for policy remediation | `string` | n/a | yes |
 | <a name="input_policy_assignment_resource_group_id"></a> [policy\_assignment\_resource\_group\_id](#input\_policy\_assignment\_resource\_group\_id) | Resource Group Id to assign the policy to | `string` | n/a | yes |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of resource group for the shared gallery | `string` | n/a | yes |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of resource group for the log analytics workspace | `string` | n/a | yes |
 | <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id) | Subscription Id to apply the contributore role of the managed identity | `string` | n/a | yes |
 
 ## Outputs

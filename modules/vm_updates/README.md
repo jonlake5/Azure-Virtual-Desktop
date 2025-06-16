@@ -26,7 +26,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_location"></a> [location](#input\_location) | Location of the shared image gallery | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Location of the resource group policy assignments and maintenance definition | `string` | n/a | yes |
 | <a name="input_maintenance_definition"></a> [maintenance\_definition](#input\_maintenance\_definition) | n/a | <pre>map(object({<br/>    maintenance_name                 = string<br/>    maintenance_scope                = string<br/>    maintenance_duration             = optional(string)<br/>    maintenance_start_date_time      = string<br/>    maintenance_end_date_time        = optional(string)<br/>    maintenance_recurrence           = optional(string)<br/>    maintenance_time_zone            = string<br/>    patch_classifications_to_include = list(string)<br/>  }))</pre> | n/a | yes |
 | <a name="input_managed_identity_id"></a> [managed\_identity\_id](#input\_managed\_identity\_id) | Id of the managed identity used for policy assignments | `string` | n/a | yes |
 | <a name="input_managed_identity_principal_id"></a> [managed\_identity\_principal\_id](#input\_managed\_identity\_principal\_id) | Principal ID of the managed identity that will run the remediations | `string` | n/a | yes |

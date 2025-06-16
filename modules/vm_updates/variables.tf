@@ -1,6 +1,6 @@
 variable "location" {
   type        = string
-  description = "Location of the shared image gallery"
+  description = "Location of the resource group policy assignments and maintenance definition"
 }
 
 variable "maintenance_definition" {

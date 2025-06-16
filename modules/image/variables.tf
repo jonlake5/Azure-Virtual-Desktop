@@ -6,12 +6,12 @@ variable "hyper_v_generation" {
 
 variable "location" {
   type        = string
-  description = "Location of the shared image gallery"
+  description = "Location of the shared image gallery image"
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "Name of resource group for the shared gallery"
+  description = "Name of resource group for the shared gallery image"
 }
 
 variable "shared_image_gallery_name" {

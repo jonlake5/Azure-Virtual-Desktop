@@ -205,9 +205,9 @@ No modules.
 | <a name="input_domain_join_password"></a> [domain\_join\_password](#input\_domain\_join\_password) | Password used for domain join of the AVD hosts | `string` | n/a | yes |
 | <a name="input_identity"></a> [identity](#input\_identity) | n/a | <pre>list(object({<br/>    identity_ids  = list(string)<br/>    identity_type = string<br/>  }))</pre> | n/a | yes |
 | <a name="input_keyvault"></a> [keyvault](#input\_keyvault) | Map of object representing the keyvault to be created | <pre>map(object({<br/>    name        = string<br/>    secret_name = optional(string, "domain-join-password")<br/>  }))</pre> | n/a | yes |
-| <a name="input_location"></a> [location](#input\_location) | Azure region | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Azure region for the automation account | `string` | n/a | yes |
 | <a name="input_managed_identity_principal_id"></a> [managed\_identity\_principal\_id](#input\_managed\_identity\_principal\_id) | Principal ID of the Managed Identity used to access keyvault | `string` | n/a | yes |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of resource group for the shared gallery | `string` | n/a | yes |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of resource group for the automation account | `string` | n/a | yes |
 | <a name="input_runbooks"></a> [runbooks](#input\_runbooks) | Map of objects defining the runbook | <pre>map(object({<br/>    file_name = string<br/>    webhook   = bool<br/>    type      = string<br/>    enabled   = bool<br/>  }))</pre> | n/a | yes |
 | <a name="input_tenant_id"></a> [tenant\_id](#input\_tenant\_id) | Tenant ID of Azure account | `string` | n/a | yes |
 

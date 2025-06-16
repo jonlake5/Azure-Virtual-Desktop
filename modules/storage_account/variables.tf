@@ -14,12 +14,18 @@ variable "directory_config" {
 
 variable "location" {
   type        = string
-  description = "Location of the shared image gallery"
+  description = "Location of the storage account"
 }
 variable "pe_subnet_id" {
   type        = string
   description = "Subnet id to put the private endpoint in for the file share"
 }
+
+variable "resource_group_name" {
+  type        = string
+  description = "Name of resource group for the shared gallery"
+}
+
 variable "smb_contributor_group_name" {
   type        = string
   description = "Name of group that will be assigned SMB Contributor role"
@@ -47,7 +53,7 @@ variable "storage_account_network_rules_default_action" {
 
 variable "storage_account_public_network_access_enabled" {
   type        = bool
-  description = "True enables publick access, false disables"
+  description = "True enables public access, false disables"
   default     = false
 }
 
@@ -69,10 +75,3 @@ variable "storage_account_tier" {
   description = "Tier of storage account (Premium or General Purpose)"
   default     = "Premium"
 }
-
-
-variable "resource_group_name" {
-  type        = string
-  description = "Name of resource group for the shared gallery"
-}
-

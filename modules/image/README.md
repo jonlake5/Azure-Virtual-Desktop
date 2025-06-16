@@ -25,8 +25,8 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_hyper_v_generation"></a> [hyper\_v\_generation](#input\_hyper\_v\_generation) | Hyper V Generation of the VM created | `string` | `"V2"` | no |
-| <a name="input_location"></a> [location](#input\_location) | Location of the shared image gallery | `string` | n/a | yes |
-| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of resource group for the shared gallery | `string` | n/a | yes |
+| <a name="input_location"></a> [location](#input\_location) | Location of the shared image gallery image | `string` | n/a | yes |
+| <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of resource group for the shared gallery image | `string` | n/a | yes |
 | <a name="input_shared_image_gallery_name"></a> [shared\_image\_gallery\_name](#input\_shared\_image\_gallery\_name) | Name of existing shared image gallery to put the shared image in | `string` | n/a | yes |
 | <a name="input_shared_image_name"></a> [shared\_image\_name](#input\_shared\_image\_name) | Name of the shared image being created | `string` | n/a | yes |
 | <a name="input_shared_image_offer"></a> [shared\_image\_offer](#input\_shared\_image\_offer) | Offer of the source image the golden image will be created from | `string` | `"windows-11"` | no |

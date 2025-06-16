@@ -1,6 +1,6 @@
 variable "location" {
   type        = string
-  description = "Location of the shared image gallery"
+  description = "Location of the AVD workspace"
 }
 
 variable "log_analytics_workspace_id" {
@@ -10,7 +10,7 @@ variable "log_analytics_workspace_id" {
 
 variable "resource_group_name" {
   type        = string
-  description = "Name of resource group for the shared gallery"
+  description = "Name of resource group for the AVD Workspace"
 }
 
 variable "workspace_description" {

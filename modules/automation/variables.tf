@@ -36,7 +36,7 @@ variable "keyvault" {
 
 variable "location" {
   type        = string
-  description = "Azure region"
+  description = "Azure region for the automation account"
 }
 variable "managed_identity_principal_id" {
   type        = string
@@ -45,7 +45,7 @@ variable "managed_identity_principal_id" {
 
 variable "resource_group_name" {
   type        = string
-  description = "Name of resource group for the shared gallery"
+  description = "Name of resource group for the automation account"
 }
 
 variable "runbooks" {

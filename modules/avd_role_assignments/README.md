@@ -28,8 +28,8 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_application_group_assignment_groups"></a> [application\_group\_assignment\_groups](#input\_application\_group\_assignment\_groups) | A list of groups that provide assignments of groups to application groups | `list(string)` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of the resource group | `string` | n/a | yes |
-| <a name="input_session_host_groups"></a> [session\_host\_groups](#input\_session\_host\_groups) | A list of groups that are used to provide apps to session hosts that are entra joined | `list(string)` | n/a | yes |
 | <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id) | Subscription ID this is being deployed into | `string` | n/a | yes |
 
 ## Outputs

@@ -33,7 +33,7 @@ variable "load_balancer_type" {
 
 variable "location" {
   type        = string
-  description = "Location of the shared image gallery"
+  description = "Location of the host pool"
 }
 
 variable "log_analytics_workspace_id" {
@@ -66,7 +66,7 @@ variable "preferred_app_group_type" {
 
 variable "resource_group_name" {
   type        = string
-  description = "Name of resource group for the shared gallery"
+  description = "Name of resource group for the host pool"
 }
 
 variable "scaling_plan_enabled" {

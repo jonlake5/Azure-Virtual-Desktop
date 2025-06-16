@@ -1,6 +1,6 @@
 variable "location" {
   type        = string
-  description = "Location of the shared image gallery"
+  description = "Location of the resource group policy assignment"
 }
 
 variable "managed_identity_id" {

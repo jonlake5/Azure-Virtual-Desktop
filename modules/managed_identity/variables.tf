@@ -6,12 +6,12 @@ variable "location" {
 
 variable "managed_identity_name" {
   type        = string
-  description = "Name of the Managed Identity"
+  description = "Name of the managed identity"
 }
 
 variable "resource_group_name" {
   type        = string
-  description = "Name of resource group for the shared gallery"
+  description = "Name of resource group for the managed identity"
 }
 
 variable "subscription_id" {
