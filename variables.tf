@@ -209,6 +209,7 @@ variable "vnet_ip_space" {
 variable "vnet_dns_servers" {
   type        = list(string)
   description = "DNS servers for vnet"
+  default     = []
 }
 
 variable "vnet_name" {
