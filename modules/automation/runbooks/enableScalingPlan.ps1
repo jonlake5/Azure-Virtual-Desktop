@@ -16,7 +16,7 @@ write-output "Starting Automation"
 
 $subscriptionId = (Get-AzContext).Subscription.Id
 # Build the full ARM path for the host pool
-$hostPoolArmPath = "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DesktopVirtualization/hostpools/$hostPoolName"
+$hostPoolArmPath = "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DesktopVirtualization/hostPools/$hostPoolName"
 
 # Get all scaling plans in the resource group
 $scalingPlan = Get-AzWvdScalingPlan -ResourceGroupName $resourceGroupName -name $scalingPlanName

@@ -72,6 +72,10 @@ locals {
       uri  = "https://www.powershellgallery.com/api/v2/package/Az/14.0.0"
       name = "Az"
     }
+    az_resources = {
+      uri  = "https://www.powershellgallery.com/api/v2/package/Az.Resources/8.0.0"
+      name = "Az.Resources"
+    }
   }
 }
 resource "azurerm_automation_powershell72_module" "module" {
