@@ -25,7 +25,7 @@ terraform {
   }
 }
 provider "azurerm" {
-  #   use_oidc = true
+  # use_oidc = true
   features {
     resource_group {
       prevent_deletion_if_contains_resources = false
@@ -63,6 +63,28 @@ resource "azurerm_subnet" "avd" {
   virtual_network_name = azurerm_virtual_network.avd.name
   address_prefixes     = [cidrsubnet(var.vnet_ip_space, 8, 0)]
   resource_group_name  = azurerm_resource_group.avd.name
+}
+
+resource "azurerm_virtual_network_peering" "to_hub" {
+  for_each                     = var.vnet_peerings
+  resource_group_name          = azurerm_resource_group.avd.name
+  name                         = each.value.name
+  virtual_network_name         = azurerm_virtual_network.avd.name
+  remote_virtual_network_id    = each.value.remote_vnet_id
+  allow_virtual_network_access = each.value.allow_virtual_network
+  use_remote_gateways          = each.value.use_remote_gateways
+  allow_forwarded_traffic      = each.value.allow_forwarded_traffic
+}
+
+resource "azurerm_virtual_network_peering" "from_hub" {
+  for_each                  = var.vnet_peerings
+  resource_group_name       = coalesce(each.value.hub_resource_group_name, azurerm_resource_group.avd.name)
+  name                      = each.value.name
+  virtual_network_name      = each.value.remote_vnet_name
+  remote_virtual_network_id = azurerm_virtual_network.avd.id
+  use_remote_gateways       = each.value.use_remote_gateways
+  allow_forwarded_traffic   = false
+  allow_gateway_transit     = each.value.allow_gateway_transit
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "file" {
@@ -110,7 +132,6 @@ module "managed_identity" {
   managed_identity_name = var.managed_identity_name
   location              = azurerm_resource_group.avd.location
   depends_on            = [azurerm_resource_group.avd]
-
 }
 
 module "monitoring" {
@@ -173,7 +194,7 @@ module "storage_account" {
   source                              = "./modules/storage_account"
   location                            = azurerm_resource_group.avd.location
   resource_group_name                 = azurerm_resource_group.avd.name
-  pe_subnet_id                        = azurerm_subnet.test-avd-subnet.id
+  pe_subnet_id                        = azurerm_subnet.avd.id
   smb_contributor_group_name          = var.storage_account.smb_contributor_group_name
   smb_elevated_contributor_group_name = var.storage_account.smb_elevated_contributor_group_name
   storage_account_name                = var.storage_account.storage_account_name
