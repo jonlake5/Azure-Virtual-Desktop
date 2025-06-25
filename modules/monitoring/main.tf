@@ -1,4 +1,7 @@
 # Create module that will setup log analytics workspace, data collection rules, apply policy to install agent on hosts, etc
+data "azurerm_resource_group" "avd" {
+  name = var.resource_group_name
+}
 
 resource "azurerm_log_analytics_workspace" "workspace" {
   location            = var.location

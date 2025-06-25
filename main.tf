@@ -142,8 +142,10 @@ module "monitoring" {
   law_name                            = var.log_analytics_workspace_name
   subscription_id                     = data.azurerm_client_config.current.subscription_id
   managed_identity_id                 = module.managed_identity.managed_identity_id
+  action_group_name                   = var.action_group.name
+  action_group_short_name             = var.action_group.short_name
+  email_receivers                     = var.action_group.email_receivers
   depends_on                          = [azurerm_resource_group.avd]
-
 }
 
 module "policies" {
@@ -152,7 +154,6 @@ module "policies" {
   resource_group_name = azurerm_resource_group.avd.name
   location            = azurerm_resource_group.avd.location
   depends_on          = [azurerm_resource_group.avd]
-
 }
 
 locals {

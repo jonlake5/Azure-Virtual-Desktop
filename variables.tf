@@ -10,6 +10,19 @@ variable "automation_account_sku" {
   default     = "Basic"
 }
 
+variable "action_group" {
+  type = object({
+    name       = string
+    short_name = string
+    email_receivers = list(object({
+      name                    = string
+      email_address           = string
+      use_common_alert_schema = optional(bool, true)
+    }))
+  })
+  description = "Defines an action group for sending alert emails to"
+}
+
 variable "automation_runbooks" {
   type = map(object({
     file_name = string
