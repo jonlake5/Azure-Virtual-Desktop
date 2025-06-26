@@ -14,11 +14,11 @@ subnet_name      = "test-avd-subnet"
 # This will peer the vNet's defined in here 
 vnet_peerings = {
   "avd_hub" = {
-    name = "avd-hub-peering"
-    remote_vnet_id = "/subscriptions/074f4b99-ea66-4a73-a146-d342db9d1e92/resourceGroups/avd-testing-permanent/providers/Microsoft.Network/virtualNetworks/avd-hub"
-    use_remote_gateways = false #optional defaults to true
-    allow_forwarded_traffic =  false #optional defaults to true
-    allow_virtual_network =  false #optional defaults to true
+    name                    = "avd-hub-peering"
+    remote_vnet_id          = "/subscriptions/074f4b99-ea66-4a73-a146-d342db9d1e92/resourceGroups/avd-testing-permanent/providers/Microsoft.Network/virtualNetworks/avd-hub"
+    use_remote_gateways     = false #optional defaults to true
+    allow_forwarded_traffic = false #optional defaults to true
+    allow_virtual_network   = false #optional defaults to true
   }
 }
 
@@ -281,3 +281,18 @@ keyvault = {
 
 # This is used in some policies to define what region(s) should be targeted for the policies.
 policy_target_locations = ["northcentralus"]
+
+#This defines an alert action group of people that should receive emails when an alert happens 
+action_group = {
+  name       = "ActionGroupAVD"
+  short_name = "avd-ag"
+  email_receivers = [{
+    name                    = "Jonathan Lake"
+    email_address           = "email.address@domain.com"
+    use_common_alert_schema = true #optional - defaults to true
+    },
+    {
+      name          = "Fred Smith"
+      email_address = "email2.address@domain.com"
+  }]
+}
