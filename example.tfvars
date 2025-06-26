@@ -14,11 +14,20 @@ subnet_name      = "test-avd-subnet"
 # This will peer the vNet's defined in here 
 vnet_peerings = {
   "avd_hub" = {
-    name                    = "avd-hub-peering"
-    remote_vnet_id          = "/subscriptions/074f4b99-ea66-4a73-a146-d342db9d1e92/resourceGroups/avd-testing-permanent/providers/Microsoft.Network/virtualNetworks/avd-hub"
-    use_remote_gateways     = false #optional defaults to true
-    allow_forwarded_traffic = false #optional defaults to true
-    allow_virtual_network   = false #optional defaults to true
+    name           = "avd-hub-peering"
+    remote_vnet_id = "/subscriptions/074f4b99-ea66-4a73-a146-d342db9d1e92/resourceGroups/avd-testing-permanent/providers/Microsoft.Network/virtualNetworks/avd-hub"
+    spoke = {
+      use_remote_gateways     = false #optional defaults to true
+      allow_forwarded_traffic = false #optional defaults to true
+      allow_virtual_network   = false #optional defaults to true
+      allow_gateway_transit   = false #optional defaults to true
+    }
+    hub = {
+      use_remote_gateways     = false #optional defaults to true
+      allow_forwarded_traffic = false #optional defaults to true
+      allow_virtual_network   = false #optional defaults to true
+      allow_gateway_transit   = false #optional defaults to true
+    }
   }
 }
 

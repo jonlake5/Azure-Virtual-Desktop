@@ -236,10 +236,18 @@ variable "vnet_peerings" {
     hub_resource_group_name = optional(string)
     remote_vnet_id          = string
     remote_vnet_name        = string
-    allow_virtual_network   = optional(bool, true)
-    use_remote_gateways     = optional(bool, true)
-    allow_forwarded_traffic = optional(bool, true)
-    allow_gateway_transit   = optional(bool, true)
+    hub = object({
+      allow_virtual_network   = optional(bool, true)
+      use_remote_gateways     = optional(bool, true)
+      allow_forwarded_traffic = optional(bool, true)
+      allow_gateway_transit   = optional(bool, true)
+    })
+    spoke = object({
+      allow_virtual_network   = optional(bool, true)
+      use_remote_gateways     = optional(bool, true)
+      allow_forwarded_traffic = optional(bool, true)
+      allow_gateway_transit   = optional(bool, true)
+    })
   }))
   default     = {}
   description = "A list of maps to peer the newly created avd vnet to"

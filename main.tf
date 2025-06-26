@@ -71,9 +71,9 @@ resource "azurerm_virtual_network_peering" "to_hub" {
   name                         = each.value.name
   virtual_network_name         = azurerm_virtual_network.avd.name
   remote_virtual_network_id    = each.value.remote_vnet_id
-  allow_virtual_network_access = each.value.allow_virtual_network
-  use_remote_gateways          = each.value.use_remote_gateways
-  allow_forwarded_traffic      = each.value.allow_forwarded_traffic
+  allow_virtual_network_access = each.value.spoke.allow_virtual_network
+  use_remote_gateways          = each.value.spoke.use_remote_gateways
+  allow_forwarded_traffic      = each.value.spoke.allow_forwarded_traffic
 }
 
 resource "azurerm_virtual_network_peering" "from_hub" {
@@ -82,9 +82,9 @@ resource "azurerm_virtual_network_peering" "from_hub" {
   name                      = each.value.name
   virtual_network_name      = each.value.remote_vnet_name
   remote_virtual_network_id = azurerm_virtual_network.avd.id
-  use_remote_gateways       = each.value.use_remote_gateways
+  use_remote_gateways       = each.value.hub.use_remote_gateways
   allow_forwarded_traffic   = false
-  allow_gateway_transit     = each.value.allow_gateway_transit
+  allow_gateway_transit     = each.value.hub.allow_gateway_transit
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "file" {
