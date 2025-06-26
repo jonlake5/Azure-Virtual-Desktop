@@ -15,10 +15,10 @@ resource "azurerm_storage_account" "avd" {
         content {
           domain_guid         = active_directory.value.active_directory_config.domain_guid
           domain_name         = active_directory.value.active_directory_config.domain_name
-          domain_sid          = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.domain_sid : null
-          forest_name         = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.forest_name : null
-          netbios_domain_name = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.netbios_domain_name : null
-          storage_sid         = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.storage_sid : null
+          domain_sid          = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.domain_sid : " "
+          forest_name         = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.forest_name : " "
+          netbios_domain_name = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.netbios_domain_name : " "
+          storage_sid         = active_directory.value.directory_type == "AD" ? active_directory.value.active_directory_config.storage_sid : " "
         }
       }
     }
