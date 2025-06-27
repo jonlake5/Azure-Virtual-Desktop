@@ -29,7 +29,7 @@ PARAMS
 }
 
 resource "azurerm_monitor_data_collection_rule" "avd_session_hosts" {
-  name                = "MSVMI-${azurerm_log_analytics_workspace.workspace.name}"
+  name                = "microsoft-avdi-${var.location}"
   resource_group_name = var.resource_group_name
   location            = var.location
 
