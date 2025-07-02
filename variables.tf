@@ -234,8 +234,8 @@ variable "vnet_peerings" {
   type = map(object({
     name                    = string
     hub_resource_group_name = optional(string)
-    remote_vnet_id          = string
-    remote_vnet_name        = string
+    hub_vnet_id             = string
+    hub_vnet_name           = string
     hub = object({
       allow_virtual_network   = optional(bool, true)
       use_remote_gateways     = optional(bool, true)

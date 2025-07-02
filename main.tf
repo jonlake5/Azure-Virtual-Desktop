@@ -70,7 +70,7 @@ resource "azurerm_virtual_network_peering" "to_hub" {
   resource_group_name          = azurerm_resource_group.avd.name
   name                         = each.value.name
   virtual_network_name         = azurerm_virtual_network.avd.name
-  remote_virtual_network_id    = each.value.remote_vnet_id
+  remote_virtual_network_id    = each.value.hub_vnet_id
   allow_virtual_network_access = each.value.spoke.allow_virtual_network
   use_remote_gateways          = each.value.spoke.use_remote_gateways
   allow_forwarded_traffic      = each.value.spoke.allow_forwarded_traffic

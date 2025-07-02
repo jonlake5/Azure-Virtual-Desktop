@@ -53,7 +53,7 @@ variable "maximum_sessions_allowed" {
 
 variable "personal_desktop_assignment_type" {
   type        = string
-  description = "Automatic assignment – The service will select an available host and assign it to an user. Possible values are Automatic and Direct. Direct Assignment – Admin selects a specific host to assign to an user. Changing this forces a new resource to be created."
+  description = "Automatic assignment - The service will select an available host and assign it to an user. Possible values are Automatic and Direct. Direct Assignment – Admin selects a specific host to assign to an user. Changing this forces a new resource to be created."
   default     = null
   nullable    = true
 }
