@@ -5,6 +5,10 @@ param (
 
 $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
+$vmResourceGroupName = $inputData.vmResourceGroupName ? $inputData.vmResourceGroupName : $resourceGroupName
+$networkResourceGroupName = $inputData.networkResourceGroupName ? $inputData.networkResourceGroupName : $resourceGroupName
+$galleryResourceGroupName = $inputData.galleryResourceGroupName ? $inputData.galleryResourceGroupName : $resourceGroupName
+$automationResourceGroupName = $inputData.automationResourceGroupName ? $inputData.automationResourceGroupName : $resourceGroupName
 $galleryImage = $inputData.galleryImage
 $hostPoolName = $inputData.hostPoolName
 $vNetName = $inputData.vNetName
@@ -36,7 +40,7 @@ if ($vmName -and ($vmName -notmatch '-\d+$')) {
     $vmName = "$vmName-1"
 }
 if (-not $vmName) {
-    $sessionHosts = Get-AzWvdSessionHost -HostPoolName $hostPoolName -ResourceGroupName $resourceGroupName
+    $sessionHosts = Get-AzWvdSessionHost -HostPoolName $hostPoolName -ResourceGroupName $galleryResourceGroupName
     if ($null -eq $sessionHosts -and $null -eq $hostPrefix) {
         throw "The value for hostPrefix was not set and there are no session hosts to model the hostname after. Exiting"
     }
@@ -70,17 +74,17 @@ if ($vmName.Length -gt 15) {
 
 
 ## Get the base image to use
-$image = Get-azgalleryImageDefinition -ResourceGroupName $resourceGroupName -GalleryName $galleryName -GalleryImageDefinitionName $imageDefinition #-GalleryImageVersionName $imageVersion
+$image = Get-azgalleryImageDefinition -ResourceGroupName $galleryResourceGroupName -GalleryName $galleryName -GalleryImageDefinitionName $imageDefinition #-GalleryImageVersionName $imageVersion
 if ($null -eq $image) {
     throw "Unable to get the shared image ($imageDefinition) from the gallery $galleryName"
 }
 
 write-output "Image is $($image.id)"
 ## Get the subnet and vNet to put the host it
-$vnet = Get-AzVirtualNetwork -ResourceGroupName $resourceGroupName -Name $vnetName
+$vnet = Get-AzVirtualNetwork -ResourceGroupName $networkResourceGroupName -Name $vnetName
 $subnet = Get-AzVirtualNetworkSubnetConfig -Name $subnetName -VirtualNetwork $vnet
 $nicName = "$($vmName)-nic"
-$nic = New-AzNetworkInterface -ResourceGroupName $resourceGroupName -Location $location -Name $nicName -SubnetId $subnet.Id -Force
+$nic = New-AzNetworkInterface -ResourceGroupName $networkResourceGroupName -Location $location -Name $nicName -SubnetId $subnet.Id -Force
 
 if ($null -eq $nic) {
     throw "Unable to create the NIC for the VM"
@@ -102,7 +106,7 @@ $vmConfig = New-AzVMConfig `
     Add-AzVMNetworkInterface -Id $nic.Id
 Write-Output "Creating the VM"
 $vm = New-AzVM `
-    -ResourceGroupName $resourceGroupName `
+    -ResourceGroupName $vmResourceGroupName `
     -Location $location `
     -VM $vmConfig  
     
@@ -121,7 +125,7 @@ dsregcmd.exe /join
     $encodedScript = [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($script))
 
     # Install the AADJoinScript Custom Script Extension
-    $null = Set-AzVMExtension -ResourceGroupName $resourceGroupName -Location $location -VMName $vmName `
+    $null = Set-AzVMExtension -ResourceGroupName $vmResourceGroupName -Location $location -VMName $vmName `
         -Name "AADJoinScript" -Publisher "Microsoft.Compute" -ExtensionType "CustomScriptExtension" `
         -TypeHandlerVersion "1.10" `
         -Settings @{ "commandToExecute" = "powershell -EncodedCommand $encodedScript" }
@@ -133,7 +137,7 @@ dsregcmd.exe /join
 
     do {
         Start-Sleep -Seconds $retryInterval
-        $extensionStatus = Get-AzVMExtension -ResourceGroupName $resourceGroupName -VMName $vmName -Name "AADJoinScript"
+        $extensionStatus = Get-AzVMExtension -ResourceGroupName $vmResourceGroupName -VMName $vmName -Name "AADJoinScript"
         $statusCode = $extensionStatus.ProvisioningState
         Write-Output "AADJoinScript extension status: $statusCode"
 
@@ -147,7 +151,7 @@ dsregcmd.exe /join
     if ($statusCode -notlike "*Succeed*") {
         throw "AADJoinScript failed or timed out after $($maxRetries * $retryInterval) seconds."
     }
-    $aadJoinExtension = Set-AzVMExtension -ResourceGroupName $resourceGroupName -Location $location -VMName $vmName `
+    $aadJoinExtension = Set-AzVMExtension -ResourceGroupName $vmResourceGroupName -Location $location -VMName $vmName `
         -Name "AADLoginForWindows" -Publisher "Microsoft.Azure.ActiveDirectory" -ExtensionType "AADLoginForWindows" `
         -TypeHandlerVersion "1.0" -Settings @{mdmId = "0000000a-0000-0000-c000-000000000000" }
 
@@ -160,13 +164,13 @@ if ($joinType -eq "AD") {
     $password = (Get-AzKeyVaultSecret -vaultName $vaultName -Name $secretName).secretValue | ConvertFrom-SecureString -AsPlainText
     [securestring]$secStringPassword = ConvertTo-SecureString $password -AsPlainText -Force
     [pscredential]$credential = New-Object System.Management.Automation.PSCredential ($user, $secStringPassword)
-    Set-AzVMADDomainExtension -Name "domain-join" -DomainName $domainName -OUPath $ouPath -VMName $vMName -Credential $credential -ResourceGroupName $ResourceGroupName -JoinOption 0x00000003 -Restart -Verbose 
+    Set-AzVMADDomainExtension -Name "domain-join" -DomainName $domainName -OUPath $ouPath -VMName $vMName -Credential $credential -ResourceGroupName $vmResourceGroupName -JoinOption 0x00000003 -Restart -Verbose 
 }
 
 if ($maintenancePlan) {
     Write-Output "Assigning Maintenance Plan $maintenanceConfigName to VM $vmName"
     $configAssignmentName = "$vmName-$maintenance"
-    $maintenanceConfig = Get-AzMaintenanceConfiguration -ResourceGroupName $resourceGroupName -Name $maintenanceConfigName
+    $maintenanceConfig = Get-AzMaintenanceConfiguration -ResourceGroupName $automationResourceGroupName -Name $maintenanceConfigName
     New-AzConfigurationAssignment `
         -ResourceGroupName $resourceGroup `
         -Location $location `
