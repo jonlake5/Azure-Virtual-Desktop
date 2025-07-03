@@ -4,6 +4,7 @@ param (
 
 $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
+$vmResourceGroupName = $inputData.vmResourceGroupName ? $inputData.vmResourceGroupName : $resourceGroupName
 $subscriptionId = $inputData.subscriptionId
 $locationFilter = $inputData.locationFilter
 $accountID = Get-AutomationVariable -Name "accountId"
@@ -14,7 +15,7 @@ $null = Connect-AzAccount -Identity -AccountId $accountID
 # Set the context
 Set-AzContext -SubscriptionId $SubscriptionId
 
-$resourceGroup = Get-AzResourceGroup -Name $resourceGroupName
+$resourceGroup = Get-AzResourceGroup -Name $vmResourceGroupName
 # Get the policy assignment
 $assignments = Get-AzPolicyAssignment -Scope $resourceGroup.ResourceId -ErrorAction Stop
 if ($null -eq $assignments) {

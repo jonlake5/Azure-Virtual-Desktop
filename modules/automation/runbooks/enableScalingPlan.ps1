@@ -6,6 +6,7 @@ Write-Output "Logging in as user assigned managed Identity"
 
 $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
+$hostPoolResourceGroupName = $inptData.hostPoolResourceGroupName ? $inputData.hostpoolResourceGroupname : $resourceGroupName
 $scalingPlanName = $inputData.scalingPlanName
 $hostPoolName = $inputData.hostPoolName
 $accountID = Get-AutomationVariable -Name "accountId"
@@ -16,10 +17,10 @@ write-output "Starting Automation"
 
 $subscriptionId = (Get-AzContext).Subscription.Id
 # Build the full ARM path for the host pool
-$hostPoolArmPath = "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DesktopVirtualization/hostPools/$hostPoolName"
+$hostPoolArmPath = "/subscriptions/$subscriptionId/resourceGroups/$hostPoolResourceGroupName/providers/Microsoft.DesktopVirtualization/hostPools/$hostPoolName"
 
 # Get all scaling plans in the resource group
-$scalingPlan = Get-AzWvdScalingPlan -ResourceGroupName $resourceGroupName -name $scalingPlanName
+$scalingPlan = Get-AzWvdScalingPlan -ResourceGroupName $hostPoolResourceGroupName -name $scalingPlanName
 if ($null -eq $scalingPlan) {
     throw "Unable to get scaling plan. Exiting."
 }
@@ -46,7 +47,7 @@ if (($false -eq $($scalingPlan.HostPoolReference.ScalingPlanEnabled) -and $scali
     }
 
     $null = Update-AzWvdScalingPlan `
-        -ResourceGroupName $resourceGroupName `
+        -ResourceGroupName $hostPoolResourceGroupName `
         -Name $scalingPlan.Name `
         -HostPoolReference $allnewRefs
 }
