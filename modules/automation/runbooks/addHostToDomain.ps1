@@ -5,6 +5,7 @@ param (
 
 $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
+$vmResourceGroupName = $inputData.vmResourceGroupName ? $inputData.vmResourceGroupname : $resourceGroupName
 $vmName = $inputData.vmName
 $domainName = $inputData.domainName
 $ouPath = $inputData.ouPath
@@ -28,4 +29,4 @@ write-output "user is $user"
 [securestring]$secStringPassword = ConvertTo-SecureString $password -AsPlainText -Force
 [pscredential]$credential = New-Object System.Management.Automation.PSCredential ($user, $secStringPassword)
 
-Set-AzVMADDomainExtension -Name "domain-join" -DomainName $domainName -OUPath $ouPath -VMName $vMName -Credential $credential -ResourceGroupName $ResourceGroupName -JoinOption 0x00000003 -Restart -Verbose
+Set-AzVMADDomainExtension -Name "domain-join" -DomainName $domainName -OUPath $ouPath -VMName $vMName -Credential $credential -ResourceGroupName $vmResourceGroupName -JoinOption 0x00000003 -Restart -Verbose

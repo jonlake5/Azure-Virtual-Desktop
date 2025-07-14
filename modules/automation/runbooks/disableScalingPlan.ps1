@@ -9,6 +9,7 @@ write-output $inputData
 
 $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
+$hostPoolResourceGroupName = $inptData.hostPoolResourceGroupName ? $inputData.hostpoolResourceGroupname : $resourceGroupName
 $scalingPlanName = $inputData.scalingPlanName
 $hostPoolName = $inputData.hostPoolName
 $accountID = Get-AutomationVariable -Name "accountId"
@@ -17,10 +18,10 @@ $null = Connect-AzAccount -Identity -AccountId $accountID
 
 $subscriptionId = (Get-AzContext).Subscription.Id
 # Build the full ARM path for the host pool
-$hostPoolArmPath = "/subscriptions/$subscriptionId/resourceGroups/$resourceGroupName/providers/Microsoft.DesktopVirtualization/hostpools/$hostPoolName"
+$hostPoolArmPath = "/subscriptions/$subscriptionId/resourceGroups/$hostPoolResourceGroupName/providers/Microsoft.DesktopVirtualization/hostpools/$hostPoolName"
 
 # Get all scaling plans in the resource group
-$scalingPlan = Get-AzWvdScalingPlan -ResourceGroupName $resourceGroupName -name $scalingPlanName
+$scalingPlan = Get-AzWvdScalingPlan -ResourceGroupName $hostPoolResourceGroupName -name $scalingPlanName
 
 if ($null -eq $scalingPlan) {
     throw "Unable to get scaling plan. Exiting."
@@ -47,7 +48,7 @@ if (($true -eq $($scalingPlan.HostPoolReference.ScalingPlanEnabled) -and $scalin
     }
 
     $null = Update-AzWvdScalingPlan `
-        -ResourceGroupName $resourceGroupName `
+        -ResourceGroupName $hostPoolResourceGroupName `
         -Name $scalingPlan.Name `
         -HostPoolReference $allnewRefs
 }
@@ -59,10 +60,10 @@ else {
 }
 
 ##Power On VMs
-$sessionHosts = Get-AzWvdSessionHost -HostPoolName $hostPoolName -ResourceGroupName $resourceGroupName 
+$sessionHosts = Get-AzWvdSessionHost -HostPoolName $hostPoolName -ResourceGroupName $hostPoolResourceGroupName 
 foreach ($sessionHost in $sessionHosts) {
     $vmName = $sessionHost.Name.split("/")[-1]
-    $vm = get-azvm -resourceGroupName $resourceGroupName -name $vmName -Status
+    $vm = get-azvm -resourceGroupName $hostPoolResourceGroupName -name $vmName -Status
     if ($vm.Statuses[1].DisplayStatus -ne "VM running") {
         write-output "Starting VM $vmName"
         $vm | start-azvm -NoWait
