@@ -171,6 +171,36 @@ variable "resource_group_name" {
   description = "Name of the resource group to be created"
 }
 
+variable "resource_group_name_compute" {
+  type        = string
+  description = "Resource Group name for the compute components"
+  default     = null
+}
+
+variable "resource_group_name_monitoring" {
+  type        = string
+  description = "Reource Group name for the monitoring components"
+  default     = null
+}
+
+variable "resource_group_name_network" {
+  type        = string
+  description = "Resource Group name for the network components"
+  default     = null
+}
+
+variable "resource_group_name_service_objects" {
+  type        = string
+  description = "Resource Group name for the service objects"
+  default     = null
+}
+
+variable "resource_group_name_storage" {
+  type        = string
+  description = "Resource Group name for the storage"
+  default     = null
+}
+
 variable "shared_image_gallery_name" {
   type        = string
   description = "Name of the shared image gallery to be created"

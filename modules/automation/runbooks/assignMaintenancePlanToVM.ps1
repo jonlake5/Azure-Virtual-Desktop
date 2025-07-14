@@ -4,7 +4,6 @@ param (
 
 $inputData = ConvertFrom-Json -InputObject $WebhookData.RequestBody
 $resourceGroupName = $inputData.resourceGroupName
-$vmResourceGroupName = $inputData.vmResourceGroupName ? $inputData.vmResourceGroupname : $resourceGroupName
 $maintenanceConfigResourceGroupName = $inputData.maintenanceConfigName ? $inputData.maintenanceConfigName : $resourceGroupName
 $maintenanceConfigName = $inputData.maintenanceConfigName
 $location = $inputData.location

@@ -172,7 +172,7 @@ if ($maintenancePlan) {
     $configAssignmentName = "$vmName-$maintenance"
     $maintenanceConfig = Get-AzMaintenanceConfiguration -ResourceGroupName $automationResourceGroupName -Name $maintenanceConfigName
     New-AzConfigurationAssignment `
-        -ResourceGroupName $resourceGroup `
+        -ResourceGroupName $automationResourceGroupName `
         -Location $location `
         -ResourceName $vmName `
         -ResourceType "VirtualMachines" `
