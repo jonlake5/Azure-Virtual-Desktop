@@ -64,7 +64,7 @@ module "host_pool" {
   start_vm_on_connect                 = each.value.host_pool.start_vm_on_connect
 }
 
-#Application Group
+## Application Group
 locals {
   flattened_application_groups = {
     for key, ag in flatten([
