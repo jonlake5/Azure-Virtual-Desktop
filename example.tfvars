@@ -220,12 +220,11 @@ shared_image_gallery_name = "NC_US_Shared_Gallery"
 images = {
   "image_1" = {
     shared_image_name = "image-app-1"
-    shared_image_sku  = "app-1-sku"
-    shared
+    # shared_image_sku = "win2019"
+    # shared_image_offer = "WindowsServer"
   }
   "image_2" = {
     shared_image_name = "image-app-2"
-    shared_image_sku  = "app-2-sku"
   }
 }
 
