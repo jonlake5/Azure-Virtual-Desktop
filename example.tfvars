@@ -16,6 +16,7 @@ vnet_peerings = {
   "avd_hub" = {
     name           = "avd-hub-peering"
     hub_vnet_id = "/subscriptions/074f4b99-ea66-4a73-a146-d342db9d1e92/resourceGroups/avd-testing-permanent/providers/Microsoft.Network/virtualNetworks/avd-hub"
+    hub_vnet_name = "hub-vnet"
     spoke = {
       use_remote_gateways     = false #optional defaults to true
       allow_forwarded_traffic = false #optional defaults to true
@@ -220,6 +221,7 @@ images = {
   "image_1" = {
     shared_image_name = "image-app-1"
     shared_image_sku  = "app-1-sku"
+    shared
   }
   "image_2" = {
     shared_image_name = "image-app-2"

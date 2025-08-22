@@ -110,7 +110,7 @@ resource "azurerm_private_dns_a_record" "storage_pe" {
 
 module "automation" {
   # source = "./modules/automation"
-  source                      = "https://github.com/jonlake5/Azure-Virtual-Desktop/modules/automation/?ref=1.0.0"
+  source                      = "github.com/jonlake5/Azure-Virtual-Desktop//modules/automation/?ref=1.2.0"
   location                    = azurerm_resource_group.avd.location
   resource_group_name         = azurerm_resource_group.avd.name
   automation_account_name     = var.automation_account_name
@@ -127,7 +127,7 @@ module "automation" {
 }
 
 module "managed_identity" {
-  source                = "github.com/jonlake5/Azure-Virtual-Desktop//modules/managed_identity/?ref=1.0.0"
+  source                = "github.com/jonlake5/Azure-Virtual-Desktop//modules/managed_identity/?ref=1.2.0"
   resource_group_name   = azurerm_resource_group.avd.name
   subscription_id       = data.azurerm_client_config.current.subscription_id
   managed_identity_name = var.managed_identity_name
@@ -136,7 +136,7 @@ module "managed_identity" {
 }
 
 module "monitoring" {
-  source                              = "github.com/jonlake5/Azure-Virtual-Desktop//modules/monitoring/?ref=1.0.0"
+  source                              = "github.com/jonlake5/Azure-Virtual-Desktop//modules/monitoring/?ref=1.2.0"
   location                            = azurerm_resource_group.avd.location
   resource_group_name                 = azurerm_resource_group.avd.name
   policy_assignment_resource_group_id = azurerm_resource_group.avd.id

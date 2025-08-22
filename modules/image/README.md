@@ -29,9 +29,9 @@ No modules.
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of resource group for the shared gallery image | `string` | n/a | yes |
 | <a name="input_shared_image_gallery_name"></a> [shared\_image\_gallery\_name](#input\_shared\_image\_gallery\_name) | Name of existing shared image gallery to put the shared image in | `string` | n/a | yes |
 | <a name="input_shared_image_name"></a> [shared\_image\_name](#input\_shared\_image\_name) | Name of the shared image being created | `string` | n/a | yes |
-| <a name="input_shared_image_offer"></a> [shared\_image\_offer](#input\_shared\_image\_offer) | Offer of the source image the golden image will be created from | `string` | `"windows-11"` | no |
-| <a name="input_shared_image_publisher"></a> [shared\_image\_publisher](#input\_shared\_image\_publisher) | Publisher of the source image the golden image will be created from | `string` | `"MyOrg"` | no |
-| <a name="input_shared_image_sku"></a> [shared\_image\_sku](#input\_shared\_image\_sku) | SKU of the source image the golden image will be created from | `string` | n/a | yes |
+| <a name="input_shared_image_offer"></a> [shared\_image\_offer](#input\_shared\_image\_offer) | Offer of the image definition that will be created in the shared image gallery | `string` | `"windows-11"` | no |
+| <a name="input_shared_image_publisher"></a> [shared\_image\_publisher](#input\_shared\_image\_publisher) | Publisher of the source image the golden image will be created from | `string` | `"microsoftwindowsdesktop"` | no |
+| <a name="input_shared_image_sku"></a> [shared\_image\_sku](#input\_shared\_image\_sku) | SKU of the source image the golden image will be created from | `string` | `"win11-24h2-avd"` | no |
 
 ## Outputs
 
