@@ -38,6 +38,12 @@ variable "application_group_type" {
   }
 }
 
+variable "default_desktop_display_name" {
+  type        = string
+  description = "Friendly display name of Session Desktop"
+  default     = "SessionDesktop"
+}
+
 variable "host_pool_id" {
   type        = string
   description = "Host Pool ID to associate this application group with"

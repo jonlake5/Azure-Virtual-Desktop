@@ -98,6 +98,7 @@ variable "environments" {
         application_group_friendly_name          = optional(string, null)
         application_group_name                   = string
         application_group_type                   = string
+        default_desktop_display_name             = optional(string, null)
         applications = optional(map(object({
           friendly_name                = optional(string, null)
           name                         = string

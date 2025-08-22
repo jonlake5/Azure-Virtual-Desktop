@@ -80,7 +80,7 @@ resource "azurerm_virtual_network_peering" "from_hub" {
   for_each                  = var.vnet_peerings
   resource_group_name       = coalesce(each.value.hub_resource_group_name, azurerm_resource_group.avd.name)
   name                      = each.value.name
-  virtual_network_name      = each.value.remote_vnet_name
+  virtual_network_name      = each.value.hub_vnet_name
   remote_virtual_network_id = azurerm_virtual_network.avd.id
   use_remote_gateways       = each.value.hub.use_remote_gateways
   allow_forwarded_traffic   = false
@@ -109,7 +109,8 @@ resource "azurerm_private_dns_a_record" "storage_pe" {
 }
 
 module "automation" {
-  source                      = "./modules/automation"
+  # source = "./modules/automation"
+  source                      = "github.com/jonlake5/Azure-Virtual-Desktop//modules/automation/?ref=1.2.0"
   location                    = azurerm_resource_group.avd.location
   resource_group_name         = azurerm_resource_group.avd.name
   automation_account_name     = var.automation_account_name
@@ -126,7 +127,7 @@ module "automation" {
 }
 
 module "managed_identity" {
-  source                = "./modules/managed_identity"
+  source                = "github.com/jonlake5/Azure-Virtual-Desktop//modules/managed_identity/?ref=1.2.0"
   resource_group_name   = azurerm_resource_group.avd.name
   subscription_id       = data.azurerm_client_config.current.subscription_id
   managed_identity_name = var.managed_identity_name
@@ -135,7 +136,7 @@ module "managed_identity" {
 }
 
 module "monitoring" {
-  source                              = "./modules/monitoring"
+  source                              = "github.com/jonlake5/Azure-Virtual-Desktop//modules/monitoring/?ref=1.2.0"
   location                            = azurerm_resource_group.avd.location
   resource_group_name                 = azurerm_resource_group.avd.name
   policy_assignment_resource_group_id = azurerm_resource_group.avd.id

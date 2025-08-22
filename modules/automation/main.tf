@@ -51,7 +51,7 @@ resource "azurerm_automation_webhook" "webhook" {
   automation_account_name = azurerm_automation_account.automation.name
   runbook_name            = split(".ps1", each.value.file_name)[0]
   name                    = "${split(".ps1", each.value.file_name)[0]}-webhook"
-  expiry_time             = timeadd(timestamp(), "999h")
+  expiry_time             = timeadd(timestamp(), "8760h")
   lifecycle {
     ignore_changes = [expiry_time]
   }

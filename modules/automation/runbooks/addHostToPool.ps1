@@ -39,7 +39,7 @@ write-output "Adding host $vmName to host pool $hostPoolName"
 Set-AzVMExtension `
     -ResourceGroupName $vmResourceGroupName `
     -VMName $vmName `
-    -Name "DSC" `
+    -Name "addHostToPool" `
     -Publisher "Microsoft.Powershell" `
     -ExtensionType "DSC" `
     -TypeHandlerVersion "2.26" `

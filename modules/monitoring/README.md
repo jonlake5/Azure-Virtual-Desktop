@@ -18,15 +18,23 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_log_analytics_workspace.workspace](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace) | resource |
+| [azurerm_monitor_action_group.avd_alert_actiongroup](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_action_group) | resource |
 | [azurerm_monitor_data_collection_rule.avd_session_hosts](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_data_collection_rule) | resource |
+| [azurerm_monitor_metric_alert.cpu_high_alert](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_metric_alert) | resource |
+| [azurerm_monitor_metric_alert.low_memory_alert](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_metric_alert) | resource |
+| [azurerm_monitor_scheduled_query_rules_alert.wvd_failed_connections](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_scheduled_query_rules_alert) | resource |
 | [azurerm_resource_group_policy_assignment.ama_install](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_policy_assignment) | resource |
 | [azurerm_resource_group_policy_assignment.associate_dcr](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_policy_assignment) | resource |
+| [azurerm_resource_group.avd](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_action_group_name"></a> [action\_group\_name](#input\_action\_group\_name) | Name of Action Group | `string` | n/a | yes |
+| <a name="input_action_group_short_name"></a> [action\_group\_short\_name](#input\_action\_group\_short\_name) | Short name of action group. Used in SMS | `string` | n/a | yes |
 | <a name="input_ama_install_policy_assignment_name"></a> [ama\_install\_policy\_assignment\_name](#input\_ama\_install\_policy\_assignment\_name) | n/a | `string` | `"Azure Monitoring Agent Policy"` | no |
+| <a name="input_email_receivers"></a> [email\_receivers](#input\_email\_receivers) | n/a | <pre>list(object({<br/>    name                    = string<br/>    email_address           = string<br/>    use_common_alert_schema = bool<br/>  }))</pre> | n/a | yes |
 | <a name="input_law_name"></a> [law\_name](#input\_law\_name) | Name of log analytics workspace | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | Location of the log analytics workspace | `string` | n/a | yes |
 | <a name="input_managed_identity_id"></a> [managed\_identity\_id](#input\_managed\_identity\_id) | Managed Identity Id for policy remediation | `string` | n/a | yes |
