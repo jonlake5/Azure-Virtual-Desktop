@@ -64,7 +64,7 @@ module "host_pool" {
   start_vm_on_connect                 = each.value.host_pool.start_vm_on_connect
 }
 
-#Application Group
+## Application Group
 locals {
   flattened_application_groups = {
     for key, ag in flatten([
@@ -96,5 +96,6 @@ module "application_group" {
   workspace_id                             = module.workspace[each.value.environment].workspace_id
   resource_group_name                      = azurerm_resource_group.avd.name
   location                                 = azurerm_resource_group.avd.location
+  default_desktop_display_name             = each.value.application_group.default_desktop_display_name
   host_pool_id                             = module.host_pool["${each.value.environment}.${each.value.host_pool_key}"].hostpool_id
 }

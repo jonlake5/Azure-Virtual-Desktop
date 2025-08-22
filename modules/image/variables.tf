@@ -26,7 +26,7 @@ variable "shared_image_name" {
 
 variable "shared_image_offer" {
   type        = string
-  default     = "qindows-11"
+  default     = "windows-11"
   description = "Offer of the image definition that will be created in the shared image gallery"
   nullable    = false
 }

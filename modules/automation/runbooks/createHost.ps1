@@ -36,7 +36,7 @@ $galleryName, $imageDefinition, $imageVersion = $galleryImage.split('/')
 ## Get the host pool so we can get the VMs and determine next name
 
 #determine the VM Name
-if ($vmName -and ($vmName -notmatch '-\d+$')) {
+if ($vmName -and ($vmName -notmatch '\d+$')) {
     $vmName = "$vmName-1"
 }
 if (-not $vmName) {
@@ -100,6 +100,9 @@ $cred = New-Object System.Management.Automation.PSCredential ($username, $secure
 $vmConfig = New-AzVMConfig `
     -VMName $vmName `
     -VMSize $vmSize `
+    -SecurityType "TrustedLaunch" `
+    -EnableVtpm $True `
+    -EnableSecureBoot $True `
     -IdentityType SystemAssigned | `
     Set-AzVMOperatingSystem -Windows -ComputerName $vmName -Credential $cred | `
     Set-AzVMSourceImage -Id $image.Id  | `
@@ -160,7 +163,7 @@ dsregcmd.exe /join
     }
 }
 if ($joinType -eq "AD") {   
-    write-output "Joining the AD domain $domainName in OU $outPath"
+    write-output "Joining the AD domain $domainName in OU $ouPath"
     $password = (Get-AzKeyVaultSecret -vaultName $vaultName -Name $secretName).secretValue | ConvertFrom-SecureString -AsPlainText
     [securestring]$secStringPassword = ConvertTo-SecureString $password -AsPlainText -Force
     [pscredential]$credential = New-Object System.Management.Automation.PSCredential ($user, $secStringPassword)
