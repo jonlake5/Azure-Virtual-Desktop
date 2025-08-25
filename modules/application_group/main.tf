@@ -1,10 +1,11 @@
 resource "azurerm_virtual_desktop_application_group" "application_group" {
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  name                = var.application_group_name
-  type                = var.application_group_type
-  host_pool_id        = var.host_pool_id
-  friendly_name       = var.application_group_friendly_name
+  resource_group_name          = var.resource_group_name
+  location                     = var.location
+  name                         = var.application_group_name
+  type                         = var.application_group_type
+  host_pool_id                 = var.host_pool_id
+  friendly_name                = var.application_group_friendly_name
+  default_desktop_display_name = var.default_desktop_display_name
 }
 
 resource "azurerm_virtual_desktop_application" "application" {

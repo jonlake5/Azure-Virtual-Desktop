@@ -111,6 +111,7 @@ Write-Output "Creating the VM"
 $vm = New-AzVM `
     -ResourceGroupName $vmResourceGroupName `
     -Location $location `
+    -DisableBginfoExtension `
     -VM $vmConfig  
     
 if ($null -eq $vm) {
