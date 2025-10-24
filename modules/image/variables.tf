@@ -1,3 +1,9 @@
+variable "disk_controller_type_nvme_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable NVMe disk controller type for the VM"
+}
+
 variable "hyper_v_generation" {
   type        = string
   description = "Hyper V Generation of the VM created"

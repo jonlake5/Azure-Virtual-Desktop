@@ -115,10 +115,11 @@ variable "environments" {
 
 variable "images" {
   type = map(object({
-    shared_image_name      = string
-    shared_image_sku       = optional(string, null)
-    shared_image_offer     = optional(string, null)
-    shared_image_publisher = optional(string, null)
+    shared_image_name                 = string
+    shared_image_sku                  = optional(string, null)
+    shared_image_offer                = optional(string, null)
+    shared_image_publisher            = optional(string, null)
+    disk_controller_type_nvme_enabled = optional(bool, false)
   }))
 }
 
